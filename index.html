@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#062418">
+<title>OrganizaMEI · Seu negócio organizado</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+<div class="app">
+
+  <!-- ============ Barra lateral (computador) ============ -->
+  <aside class="sidebar" aria-label="Menu principal">
+    <a class="brand" href="#inicio" data-route="inicio" aria-label="OrganizaMEI, ir para o início">
+      <svg class="logo-mark" viewBox="0 0 40 40" aria-hidden="true"><rect x="4" y="25" width="7" height="11" rx="1.6" fill="#57e39b" opacity=".6"/><rect x="14.5" y="19" width="7" height="17" rx="1.6" fill="#57e39b" opacity=".8"/><rect x="25" y="13" width="7" height="23" rx="1.6" fill="#57e39b"/><path d="M3 18 13 11l6 4 14-10" fill="none" stroke="#57e39b" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M27 4.5h6.5V11" fill="none" stroke="#57e39b" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span class="brand-name">Organiza<b>MEI</b></span>
+    </a>
+    <p class="brand-motto">Planeje · Controle · Cresça</p>
+
+    <nav class="nav">
+      <a class="nav-item" href="#inicio" data-route="inicio"><i data-icon="home"></i><span>Início</span></a>
+      <a class="nav-item" href="#lancamentos" data-route="lancamentos"><i data-icon="list"></i><span>Lançamentos</span></a>
+      <a class="nav-item" href="#categorias" data-route="categorias"><i data-icon="folder"></i><span>Categorias</span></a>
+      <a class="nav-item" href="#relatorios" data-route="relatorios"><i data-icon="chart"></i><span>Relatórios</span></a>
+      <a class="nav-item" href="#dicas" data-route="dicas"><i data-icon="bulb"></i><span>Dicas</span></a>
+      <a class="nav-item" href="#configuracoes" data-route="configuracoes"><i data-icon="gear"></i><span>Configurações</span></a>
+    </nav>
+
+    <div class="sidebar-foot">
+      <p class="tagline">Seu negócio organizado.<br><span>Suas decisões mais claras.</span></p>
+      <a class="user-chip" href="#configuracoes" data-route="configuracoes">
+        <span class="avatar" data-avatar>M</span>
+        <span class="user-txt"><strong data-user>Maria</strong><small data-biz>Ateliê da Maria</small></span>
+      </a>
+    </div>
+  </aside>
+
+  <!-- ============ Topo (celular) ============ -->
+  <header class="mobile-top">
+    <a class="brand" href="#inicio" data-route="inicio" aria-label="OrganizaMEI, ir para o início">
+      <svg class="logo-mark" viewBox="0 0 40 40" aria-hidden="true"><rect x="4" y="25" width="7" height="11" rx="1.6" fill="#57e39b" opacity=".6"/><rect x="14.5" y="19" width="7" height="17" rx="1.6" fill="#57e39b" opacity=".8"/><rect x="25" y="13" width="7" height="23" rx="1.6" fill="#57e39b"/><path d="M3 18 13 11l6 4 14-10" fill="none" stroke="#57e39b" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M27 4.5h6.5V11" fill="none" stroke="#57e39b" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span class="brand-name">Organiza<b>MEI</b></span>
+    </a>
+    <a class="avatar sm" href="#configuracoes" data-route="configuracoes" data-avatar aria-label="Configurações">M</a>
+  </header>
+
+  <main class="main" id="main">
+
+    <!-- ============ INÍCIO / DASHBOARD ============ -->
+    <section class="view" data-view="inicio" aria-labelledby="t-inicio">
+      <div class="page-head">
+        <div>
+          <h1 id="t-inicio">Olá, <span id="helloName">Maria</span>!</h1>
+          <p class="sub" id="helloSub">Este é o resumo do seu negócio neste mês.</p>
+        </div>
+        <div class="head-actions">
+          <label class="select-pill"><i data-icon="calendar"></i><span class="sr-only">Mês</span><select id="dashMonth"></select></label>
+          <button class="btn btn-primary hide-mobile" type="button" data-action="new"><i data-icon="plus"></i>Novo lançamento</button>
+        </div>
+      </div>
+
+      <div class="kpis">
+        <article class="kpi kpi-in" id="kpiIn">
+          <div class="kpi-top"><span class="kpi-icon"><i data-icon="up"></i></span>Entradas</div>
+          <div class="kpi-value" id="kIn">R$ 0,00</div>
+          <div class="kpi-delta" id="kInDelta"></div>
+        </article>
+        <article class="kpi kpi-out" id="kpiOut">
+          <div class="kpi-top"><span class="kpi-icon"><i data-icon="down"></i></span>Saídas</div>
+          <div class="kpi-value" id="kOut">R$ 0,00</div>
+          <div class="kpi-delta" id="kOutDelta"></div>
+        </article>
+        <article class="kpi kpi-res" id="kpiRes">
+          <div class="kpi-top"><span class="kpi-icon"><i data-icon="wallet"></i></span>Resultado<span class="status" id="kStatus">—</span></div>
+          <div class="kpi-value" id="kRes">R$ 0,00</div>
+          <div class="kpi-delta" id="kResDelta"></div>
+        </article>
+      </div>
+
+      <div class="grid-2">
+        <article class="card">
+          <header class="card-head">
+            <h3>Entradas x Saídas</h3>
+            <div class="legend"><span><i class="dot in"></i>Entradas</span><span><i class="dot out"></i>Saídas</span></div>
+          </header>
+          <div class="chart-host clickable" id="dashBars"></div>
+        </article>
+        <article class="card">
+          <header class="card-head">
+            <h3>Principais despesas</h3>
+            <a class="link" href="#relatorios" data-route="relatorios">Ver relatório</a>
+          </header>
+          <div class="chart-host donut-wrap" id="dashDonut"></div>
+        </article>
+      </div>
+
+      <article class="insight" id="dashInsight">
+        <span class="insight-icon"><i data-icon="bulb"></i></span>
+        <div>
+          <h3>Insight do seu negócio</h3>
+          <ul class="insight-list" id="insightList"></ul>
+        </div>
+      </article>
+
+      <article class="card">
+        <header class="card-head">
+          <h3>Últimos lançamentos</h3>
+          <a class="link" href="#lancamentos" data-route="lancamentos">Ver todos</a>
+        </header>
+        <ul class="mini-list" id="recentList"></ul>
+      </article>
+    </section>
+
+    <!-- ============ LANÇAMENTOS ============ -->
+    <section class="view" data-view="lancamentos" aria-labelledby="t-lanc" hidden>
+      <div class="page-head">
+        <div>
+          <h1 id="t-lanc">Lançamentos</h1>
+          <p class="sub">Registre suas entradas e saídas. O resto o sistema calcula.</p>
+        </div>
+        <button class="btn btn-primary" type="button" data-action="new"><i data-icon="plus"></i>Novo lançamento</button>
+      </div>
+
+      <article class="card">
+        <div class="toolbar">
+          <label class="search"><i data-icon="search"></i><input id="fSearch" type="search" placeholder="Buscar por descrição ou categoria" aria-label="Buscar lançamentos"></label>
+          <label class="select-pill"><i data-icon="calendar"></i><span class="sr-only">Mês</span><select id="fMonth"></select></label>
+          <div class="seg" id="fType" role="group" aria-label="Tipo">
+            <button type="button" data-v="todos">Todos</button>
+            <button type="button" data-v="entrada">Entradas</button>
+            <button type="button" data-v="saida">Saídas</button>
+          </div>
+        </div>
+        <div class="summary-strip" id="lancSummary"></div>
+        <div class="table-wrap" id="lancTableWrap">
+          <table class="table table-lanc">
+            <thead>
+              <tr><th>Data</th><th>Descrição</th><th>Categoria</th><th>Tipo</th><th class="num">Valor</th><th><span class="sr-only">Ações</span></th></tr>
+            </thead>
+            <tbody id="lancBody"></tbody>
+          </table>
+        </div>
+        <div class="empty" id="lancEmpty" hidden>
+          <i data-icon="list"></i>
+          <p>Nenhum lançamento encontrado com esses filtros.</p>
+          <button class="btn btn-ghost" type="button" data-action="new"><i data-icon="plus"></i>Novo lançamento</button>
+        </div>
+      </article>
+    </section>
+
+    <!-- ============ CATEGORIAS ============ -->
+    <section class="view" data-view="categorias" aria-labelledby="t-cat" hidden>
+      <div class="page-head">
+        <div>
+          <h1 id="t-cat">Categorias</h1>
+          <p class="sub">Defina como suas entradas e saídas são classificadas.</p>
+        </div>
+        <button class="btn btn-primary" type="button" data-action="new-cat"><i data-icon="plus"></i>Nova categoria</button>
+      </div>
+
+      <article class="card explain">
+        <span class="insight-icon green"><i data-icon="check"></i></span>
+        <p><strong>Classificação automática.</strong> Ao escolher a categoria e a subcategoria em um lançamento, o OrganizaMEI já sabe se é entrada ou saída e onde ele aparece nos relatórios. É a lógica do PROCV, sem precisar de fórmula.</p>
+      </article>
+
+      <div class="cat-cols">
+        <div>
+          <h2 class="col-title"><i class="dot in"></i>Entradas</h2>
+          <div id="catIn"></div>
+        </div>
+        <div>
+          <h2 class="col-title"><i class="dot out"></i>Saídas</h2>
+          <div id="catOut"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ RELATÓRIOS ============ -->
+    <section class="view" data-view="relatorios" aria-labelledby="t-rel" hidden>
+      <div class="page-head">
+        <div>
+          <h1 id="t-rel">Relatórios</h1>
+          <p class="sub" id="rRangeLabel"></p>
+        </div>
+      </div>
+
+      <article class="card filters-card">
+        <div class="filters">
+          <label class="field"><span>Período ou mês</span><select id="rPeriodo"></select></label>
+          <label class="field" data-custom><span>De</span><input type="date" id="rDe"></label>
+          <label class="field" data-custom><span>Até</span><input type="date" id="rAte"></label>
+          <label class="field"><span>Categoria</span><select id="rCat"></select></label>
+          <div class="field">
+            <span>Tipo</span>
+            <div class="seg" id="rTipo" role="group" aria-label="Tipo">
+              <button type="button" data-v="todos">Todos</button>
+              <button type="button" data-v="entrada">Entradas</button>
+              <button type="button" data-v="saida">Saídas</button>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <div class="kpis kpis-4">
+        <article class="kpi kpi-in">
+          <div class="kpi-top"><span class="kpi-icon"><i data-icon="up"></i></span>Total de entradas</div>
+          <div class="kpi-value" id="rIn">R$ 0,00</div>
+        </article>
+        <article class="kpi kpi-out">
+          <div class="kpi-top"><span class="kpi-icon"><i data-icon="down"></i></span>Total de saídas</div>
+          <div class="kpi-value" id="rOut">R$ 0,00</div>
+        </article>
+        <article class="kpi kpi-res" id="rResCard">
+          <div class="kpi-top"><span class="kpi-icon"><i data-icon="wallet"></i></span>Resultado<span class="status" id="rStatus">—</span></div>
+          <div class="kpi-value" id="rRes">R$ 0,00</div>
+        </article>
+        <article class="kpi kpi-margin">
+          <div class="kpi-top"><span class="kpi-icon"><i data-icon="percent"></i></span>Margem</div>
+          <div class="kpi-value" id="rMargem">—</div>
+          <div class="kpi-delta">Quanto de cada R$ 1 que entra vira resultado</div>
+        </article>
+      </div>
+
+      <article class="card" style="margin-bottom:16px">
+        <header class="card-head">
+          <h3 id="rBarsTitle">Evolução no período</h3>
+          <div class="legend"><span><i class="dot in"></i>Entradas</span><span><i class="dot out"></i>Saídas</span></div>
+        </header>
+        <div class="chart-host" id="rBars"></div>
+      </article>
+
+      <div class="grid-2 even">
+        <article class="card" id="rRankOutCard">
+          <header class="card-head"><h3>Para onde vai o dinheiro</h3><span class="muted sm">Saídas por subcategoria</span></header>
+          <div class="rank" id="rRankOut"></div>
+        </article>
+        <article class="card" id="rRankInCard">
+          <header class="card-head"><h3>De onde vem o dinheiro</h3><span class="muted sm">Entradas por subcategoria</span></header>
+          <div class="rank" id="rRankIn"></div>
+        </article>
+      </div>
+
+      <article class="card">
+        <header class="card-head"><h3>Resumo por categoria</h3></header>
+        <div class="table-wrap">
+          <table class="table table-sum">
+            <thead>
+              <tr><th>Subcategoria</th><th>Categoria</th><th>Tipo</th><th class="num">Lançamentos</th><th class="num">Total</th><th class="num">% do tipo</th></tr>
+            </thead>
+            <tbody id="rTable"></tbody>
+          </table>
+        </div>
+      </article>
+    </section>
+
+    <!-- ============ DICAS ============ -->
+    <section class="view" data-view="dicas" aria-labelledby="t-dicas" hidden>
+      <div class="page-head">
+        <div>
+          <h1 id="t-dicas">Dicas e insights</h1>
+          <p class="sub">Informação simples para decidir melhor.</p>
+        </div>
+      </div>
+
+      <article class="insight">
+        <span class="insight-icon"><i data-icon="bulb"></i></span>
+        <div>
+          <h3 id="dInsTitle">Insights do seu negócio</h3>
+          <ul class="insight-list" id="dInsList"></ul>
+        </div>
+      </article>
+
+      <h2 class="section-title">Dicas para MEIs</h2>
+      <div class="tips" id="tipsGrid"></div>
+    </section>
+
+    <!-- ============ CONFIGURAÇÕES ============ -->
+    <section class="view" data-view="configuracoes" aria-labelledby="t-cfg" hidden>
+      <div class="page-head">
+        <div>
+          <h1 id="t-cfg">Configurações</h1>
+          <p class="sub">Personalize o OrganizaMEI para o seu negócio.</p>
+        </div>
+      </div>
+
+      <div class="settings">
+        <article class="card">
+          <h3 class="card-title">Seu negócio</h3>
+          <div class="form-stack">
+            <label class="field"><span>Nome do negócio</span><input id="sNegocio" maxlength="50" autocomplete="organization"></label>
+            <label class="field"><span>Seu nome</span><input id="sUsuario" maxlength="40" autocomplete="given-name"></label>
+            <label class="field"><span>E-mail</span><input id="sEmail" type="email" maxlength="80" autocomplete="email"></label>
+            <label class="field"><span>Moeda</span>
+              <select id="sMoeda">
+                <option value="BRL">Real (R$)</option>
+                <option value="USD">Dólar (US$)</option>
+                <option value="EUR">Euro (€)</option>
+              </select>
+            </label>
+          </div>
+          <div class="card-actions"><button class="btn btn-primary" type="button" id="sSave"><i data-icon="check"></i>Salvar alterações</button></div>
+        </article>
+
+        <div class="stack">
+          <article class="card">
+            <h3 class="card-title">Preferências</h3>
+            <div class="pref-row">
+              <div><strong>Tema</strong><small>O escuro segue a identidade da marca.</small></div>
+              <div class="seg" id="sTema" role="group" aria-label="Tema">
+                <button type="button" data-v="escuro">Escuro</button>
+                <button type="button" data-v="claro">Claro</button>
+              </div>
+            </div>
+            <div class="pref-row">
+              <div><strong>Insights no início</strong><small>Mostra o card com análises automáticas.</small></div>
+              <label class="switch"><input type="checkbox" id="sInsights" aria-label="Mostrar insights no início"><span></span></label>
+            </div>
+          </article>
+
+          <article class="card">
+            <h3 class="card-title">Dados</h3>
+            <p class="muted sm">Os lançamentos ficam salvos neste navegador. Antes de apresentar, restaure os dados de exemplo para começar do zero.</p>
+            <div class="btn-row">
+              <button class="btn btn-ghost" type="button" id="sReset">Restaurar dados de exemplo</button>
+              <button class="btn btn-danger" type="button" id="sClear">Apagar lançamentos</button>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============ Menu inferior (celular) ============ -->
+  <nav class="bottom-nav" aria-label="Navegação">
+    <a class="bn-item" href="#inicio" data-route="inicio"><i data-icon="home"></i><span>Início</span></a>
+    <a class="bn-item" href="#lancamentos" data-route="lancamentos"><i data-icon="list"></i><span>Lançamentos</span></a>
+    <button class="bn-fab" type="button" data-action="new" aria-label="Novo lançamento"><i data-icon="plus"></i></button>
+    <a class="bn-item" href="#relatorios" data-route="relatorios"><i data-icon="chart"></i><span>Relatórios</span></a>
+    <button class="bn-item" type="button" data-action="more" id="bnMore"><i data-icon="menu"></i><span>Mais</span></button>
+  </nav>
+</div>
+
+<!-- ============ Modal: lançamento ============ -->
+<div class="modal" id="modalLanc" hidden>
+  <div class="modal-backdrop" data-close></div>
+  <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="lancTitle">
+    <header class="modal-head">
+      <h2 id="lancTitle">Novo lançamento</h2>
+      <button class="icon-btn" type="button" data-close aria-label="Fechar"><i data-icon="x"></i></button>
+    </header>
+    <div class="seg seg-type" id="lType" role="group" aria-label="Tipo">
+      <button type="button" data-v="entrada"><i data-icon="up"></i>Entrada</button>
+      <button type="button" data-v="saida"><i data-icon="down"></i>Saída</button>
+    </div>
+    <div class="form-grid">
+      <label class="field"><span>Data</span><input type="date" id="lData"></label>
+      <label class="field"><span>Valor</span><input type="text" id="lValor" inputmode="numeric" placeholder="R$ 0,00" autocomplete="off"></label>
+      <label class="field full"><span>Descrição</span><input type="text" id="lDesc" maxlength="80" placeholder="Ex.: Venda de produto" autocomplete="off"></label>
+      <label class="field"><span>Categoria</span><select id="lCat"></select></label>
+      <label class="field"><span>Subcategoria</span><select id="lSub"></select></label>
+      <label class="field full"><span>Observação <em>(opcional)</em></span><textarea id="lObs" rows="2" maxlength="200" placeholder="Algum detalhe que vale lembrar depois"></textarea></label>
+    </div>
+    <p class="classify" id="lClassify"></p>
+    <p class="form-error" id="lError" role="alert"></p>
+    <footer class="modal-foot">
+      <button class="btn btn-ghost" type="button" data-close>Cancelar</button>
+      <button class="btn btn-primary" type="button" id="lSave">Salvar lançamento</button>
+    </footer>
+  </div>
+</div>
+
+<!-- ============ Modal: nova categoria ============ -->
+<div class="modal" id="modalCat" hidden>
+  <div class="modal-backdrop" data-close></div>
+  <div class="modal-card narrow" role="dialog" aria-modal="true" aria-labelledby="catTitle">
+    <header class="modal-head">
+      <h2 id="catTitle">Nova categoria</h2>
+      <button class="icon-btn" type="button" data-close aria-label="Fechar"><i data-icon="x"></i></button>
+    </header>
+    <div class="seg seg-type" id="ncTipo" role="group" aria-label="Tipo">
+      <button type="button" data-v="entrada"><i data-icon="up"></i>Entrada</button>
+      <button type="button" data-v="saida"><i data-icon="down"></i>Saída</button>
+    </div>
+    <div class="form-stack">
+      <label class="field"><span>Nome da categoria</span><input id="ncNome" maxlength="40" placeholder="Ex.: Despesas fixas" autocomplete="off"></label>
+      <label class="field"><span>Subcategorias <em>(separe por vírgula)</em></span><input id="ncSubs" maxlength="200" placeholder="Ex.: Internet, Energia, Contador" autocomplete="off"></label>
+    </div>
+    <p class="form-error" id="ncError" role="alert"></p>
+    <footer class="modal-foot">
+      <button class="btn btn-ghost" type="button" data-close>Cancelar</button>
+      <button class="btn btn-primary" type="button" id="ncSave">Criar categoria</button>
+    </footer>
+  </div>
+</div>
+
+<!-- ============ Modal: confirmação ============ -->
+<div class="modal" id="modalConfirm" hidden>
+  <div class="modal-backdrop" data-close></div>
+  <div class="modal-card narrow" role="alertdialog" aria-modal="true" aria-labelledby="cTitle" aria-describedby="cText">
+    <header class="modal-head"><h2 id="cTitle">Confirmar</h2></header>
+    <p class="modal-text" id="cText"></p>
+    <footer class="modal-foot">
+      <button class="btn btn-ghost" type="button" data-close>Cancelar</button>
+      <button class="btn btn-danger" type="button" id="cOk">Confirmar</button>
+    </footer>
+  </div>
+</div>
+
+<!-- ============ Folha "Mais" (celular) ============ -->
+<div class="modal" id="modalMore" hidden>
+  <div class="modal-backdrop" data-close></div>
+  <div class="modal-card narrow" role="dialog" aria-modal="true" aria-label="Mais opções">
+    <div class="sheet-handle"></div>
+    <nav class="sheet-nav">
+      <a href="#categorias" data-route="categorias"><i data-icon="folder"></i>Categorias</a>
+      <a href="#dicas" data-route="dicas"><i data-icon="bulb"></i>Dicas e insights</a>
+      <a href="#configuracoes" data-route="configuracoes"><i data-icon="gear"></i>Configurações</a>
+    </nav>
+    <p class="sheet-tagline">Seu negócio organizado. <span>Suas decisões mais claras.</span></p>
+  </div>
+</div>
+
+<div class="toasts" id="toasts" aria-live="polite"></div>
+<div class="tooltip" id="tooltip" role="tooltip"></div>
+
+<script src="script.js"></script>
+</body>
+</html>
