@@ -3,15 +3,1049 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#062418">
+<meta name="theme-color" content="#0b2a1f">
 <title>OrganizaMEI · Seu negócio organizado</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="./css/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=DM+Sans:opsz,wght@9..40,400..700&display=swap" rel="stylesheet">
+<style>
+/* =========================================================
+   OrganizaMEI — Seu negócio organizado. Suas decisões mais claras.
+   Direção visual: extrato bancário bem feito, não painel de startup.
+   Superfícies planas, uma frase grande que explica o mês, números em destaque.
+   ========================================================= */
+
+/* ---------- Cores: tema escuro (padrão da marca) ---------- */
+:root,
+:root[data-theme="dark"] {
+  --bg: #0b2a1f;
+  --panel: #0f3327;
+  --panel-2: #143c2f;
+  --panel-3: #1a4637;
+  --line: rgba(234, 243, 236, .09);
+  --line-strong: rgba(234, 243, 236, .17);
+  --text: #eaf3ec;
+  --text-2: #a8bfb1;
+  --text-3: #7c968a;
+  --accent: #5fdc98;
+  --accent-hover: #78e6ab;
+  --accent-ink: #072018;
+  --accent-soft: rgba(95, 220, 152, .12);
+  --in: #5fdc98;
+  --in-soft: rgba(95, 220, 152, .13);
+  --out: #ef8a7a;
+  --out-soft: rgba(239, 138, 122, .14);
+  --warn: #e7b95a;
+  --warn-soft: rgba(231, 185, 90, .14);
+  --info: #7cc7d9;
+  --input-bg: #0b2b20;
+  --grid: rgba(234, 243, 236, .07);
+  --overlay: rgba(3, 16, 11, .6);
+  --side-bg: #08221a;
+  color-scheme: dark;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { color-scheme: dark; }
+}
+:root[data-theme="light"] {
+  --bg: #f1eee5;
+  --panel: #fffdf8;
+  --panel-2: #f4f1e8;
+  --panel-3: #e9e4d6;
+  --line: rgba(16, 52, 38, .10);
+  --line-strong: rgba(16, 52, 38, .19);
+  --text: #13281f;
+  --text-2: #4c6357;
+  --text-3: #7d9086;
+  --accent: #1d9a5c;
+  --accent-hover: #178350;
+  --accent-ink: #ffffff;
+  --accent-soft: rgba(29, 154, 92, .10);
+  --in: #1d8f56;
+  --in-soft: #e2f2e8;
+  --out: #c4503f;
+  --out-soft: #f7e5e1;
+  --warn: #a2730c;
+  --warn-soft: #f5ecd3;
+  --info: #2a7f93;
+  --input-bg: #fbf9f3;
+  --grid: rgba(16, 52, 38, .08);
+  --overlay: rgba(10, 30, 22, .4);
+  --side-bg: #0e3125;
+  color-scheme: light;
+}
+
+:root {
+  --mint: #5fdc98;
+  --side-line: rgba(255, 255, 255, .07);
+  --side-text: #c9ddd2;
+  --side-muted: #86a596;
+  --font: "DM Sans", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-display: "Bricolage Grotesque", "DM Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --side-w: 236px;
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* ---------- Base ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { scroll-padding-top: env(safe-area-inset-top, 0px); -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: var(--font);
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--text);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+}
+body.no-scroll { overflow: hidden; }
+h1, h2, h3, p { margin: 0; }
+a { color: inherit; }
+button { font-family: inherit; }
+.ic { width: 19px; height: 19px; flex: none; }
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+}
+.muted { color: var(--text-3); }
+.sm { font-size: 13px; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* ---------- Estrutura ---------- */
+.app { min-height: 100vh; }
+
+.sidebar {
+  position: fixed;
+  top: 0; bottom: 0; left: 0;
+  z-index: 30;
+  width: var(--side-w);
+  display: flex;
+  flex-direction: column;
+  padding: calc(24px + env(safe-area-inset-top, 0px)) 14px calc(18px + env(safe-area-inset-bottom, 0px));
+  background: var(--side-bg);
+  border-right: 1px solid var(--side-line);
+  overflow-y: auto;
+}
+.brand { display: inline-flex; align-items: center; gap: 9px; text-decoration: none; color: #fff; padding: 0 10px; }
+.logo-mark { width: 30px; height: 30px; flex: none; }
+.brand-name { font-family: var(--font-display); font-size: 21px; font-weight: 700; letter-spacing: -.02em; line-height: 1; }
+.brand-name b { color: var(--mint); font-weight: 700; }
+.nav { display: flex; flex-direction: column; gap: 2px; margin-top: 30px; }
+.nav-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 9px 12px;
+  border-radius: 8px;
+  text-decoration: none;
+  color: var(--side-text);
+  font-weight: 500;
+  font-size: 14.5px;
+}
+.nav-item .ic { opacity: .7; }
+.nav-item:hover { background: rgba(255, 255, 255, .04); color: #fff; }
+.nav-item.active { background: rgba(255, 255, 255, .06); color: #fff; font-weight: 600; }
+.nav-item.active .ic { color: var(--mint); opacity: 1; }
+.nav-item.active::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 8px; bottom: 8px;
+  width: 3px;
+  border-radius: 0 3px 3px 0;
+  background: var(--mint);
+}
+.sidebar-foot { margin-top: auto; padding-top: 24px; }
+.tagline { margin: 0 10px 16px; font-size: 13px; line-height: 1.45; color: var(--side-muted); }
+.user-chip {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px;
+  border-top: 1px solid var(--side-line);
+  text-decoration: none;
+  color: #fff;
+}
+.user-chip:hover .user-txt strong { text-decoration: underline; }
+.user-txt { min-width: 0; display: grid; }
+.user-txt strong { font-size: 14px; font-weight: 600; }
+.user-txt small { font-size: 12px; color: var(--side-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.avatar {
+  width: 34px; height: 34px; flex: none;
+  display: grid; place-items: center;
+  border-radius: 50%;
+  background: var(--mint);
+  color: #072018;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 15px;
+  text-decoration: none;
+}
+.avatar.sm { width: 32px; height: 32px; font-size: 14px; }
+
+.main {
+  margin-left: var(--side-w);
+  padding: 36px clamp(20px, 3.5vw, 48px) 64px;
+}
+.view { max-width: 1160px; margin: 0 auto; }
+.mobile-top, .bottom-nav { display: none; }
+
+/* ---------- Cabeçalho das páginas ---------- */
+.page-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 22px;
+}
+.page-head h1 { font-family: var(--font-display); font-size: clamp(26px, 2.6vw, 32px); font-weight: 700; letter-spacing: -.025em; line-height: 1.15; }
+.sub { margin-top: 3px; color: var(--text-2); }
+.head-actions { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.section-title { font-family: var(--font-display); font-size: 21px; font-weight: 700; letter-spacing: -.015em; margin: 34px 0 6px; }
+
+/* ---------- Botões e controles ---------- */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+  padding: 10px 16px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background .15s, border-color .15s;
+}
+.btn .ic { width: 17px; height: 17px; }
+.btn-primary { background: var(--accent); color: var(--accent-ink); }
+.btn-primary:hover { background: var(--accent-hover); }
+.btn-ghost { background: transparent; color: var(--text); border-color: var(--line-strong); }
+.btn-ghost:hover { background: var(--panel-2); }
+.btn-danger { background: transparent; color: var(--out); border-color: var(--out); }
+.btn-danger:hover { background: var(--out-soft); }
+.btn.sm { padding: 8px 12px; font-size: 13px; }
+.btn-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 14px; }
+
+.icon-btn {
+  width: 34px; height: 34px;
+  display: grid; place-items: center;
+  border-radius: 8px;
+  border: 0;
+  background: transparent;
+  color: var(--text-3);
+  cursor: pointer;
+}
+.icon-btn .ic { width: 17px; height: 17px; }
+.icon-btn:hover { color: var(--text); background: var(--panel-2); }
+.icon-btn.sm { width: 30px; height: 30px; }
+.icon-btn.sm .ic { width: 16px; height: 16px; }
+.icon-btn.danger:hover { color: var(--out); background: var(--out-soft); }
+
+.select-pill {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  border-radius: 10px;
+  background: var(--panel);
+  border: 1px solid var(--line-strong);
+  color: var(--text);
+}
+.select-pill > .ic { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); width: 17px; height: 17px; color: var(--text-3); pointer-events: none; }
+.select-pill select {
+  appearance: none;
+  -webkit-appearance: none;
+  height: 40px;
+  padding: 0 34px 0 37px;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  outline: none;
+}
+.select-pill::after {
+  content: "";
+  position: absolute;
+  right: 14px; top: 50%;
+  width: 6px; height: 6px;
+  border-right: 1.5px solid var(--text-3);
+  border-bottom: 1.5px solid var(--text-3);
+  transform: translateY(-70%) rotate(45deg);
+  pointer-events: none;
+}
+.select-pill:focus-within { border-color: var(--accent); }
+select option, select optgroup { background: var(--panel); color: var(--text); }
+
+.seg {
+  display: inline-flex;
+  gap: 2px;
+  padding: 3px;
+  border-radius: 10px;
+  background: var(--input-bg);
+  border: 1px solid var(--line);
+}
+.seg button {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  padding: 6px 13px;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  color: var(--text-2);
+  font-size: 13.5px;
+  font-weight: 500;
+  cursor: pointer;
+}
+.seg button:hover { color: var(--text); }
+.seg button.on { background: var(--panel-3); color: var(--text); font-weight: 600; }
+.seg-type { display: grid; grid-template-columns: 1fr 1fr; width: 100%; margin-bottom: 18px; }
+.seg-type button { padding: 10px; font-size: 15px; }
+.seg-type button .ic { width: 17px; height: 17px; }
+.seg-type button.on[data-v="entrada"] { background: var(--in-soft); color: var(--in); }
+.seg-type button.on[data-v="saida"] { background: var(--out-soft); color: var(--out); }
+
+/* ---------- Campos ---------- */
+.field { display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 500; color: var(--text-2); min-width: 0; }
+.field em { font-style: normal; color: var(--text-3); }
+.input,
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  min-width: 0;
+  padding: 10px 12px;
+  border: 1px solid var(--line-strong);
+  border-radius: 10px;
+  background: var(--input-bg);
+  color: var(--text);
+  font: inherit;
+  font-size: 15px;
+  outline: none;
+  transition: border-color .15s;
+}
+.field textarea { resize: vertical; min-height: 60px; }
+.field select {
+  appearance: none;
+  -webkit-appearance: none;
+  padding-right: 36px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%2386a495' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 13px center;
+  cursor: pointer;
+}
+.input:focus,
+.field input:focus,
+.field select:focus,
+.field textarea:focus { border-color: var(--accent); }
+.input::placeholder, .field input::placeholder, .field textarea::placeholder { color: var(--text-3); }
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.form-grid .full { grid-column: 1 / -1; }
+.form-stack { display: grid; gap: 14px; }
+.classify {
+  display: flex; align-items: flex-start; gap: 8px;
+  margin-top: 14px;
+  font-size: 13px;
+  color: var(--text-2);
+}
+.classify .ic { width: 15px; height: 15px; margin-top: 2px; color: var(--accent); }
+.classify:empty, .form-error:empty { display: none; }
+.form-error { margin-top: 10px; color: var(--out); font-size: 13.5px; font-weight: 600; }
+
+/* ---------- Painéis ---------- */
+.card {
+  min-width: 0;
+  padding: 22px;
+  border-radius: 14px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+}
+.card-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; }
+.card-head h3, .card-title { font-size: 15.5px; font-weight: 600; }
+.card-title { margin-bottom: 16px; }
+.card-note { margin: -10px 0 14px; font-size: 13px; color: var(--text-3); }
+.card-actions { margin-top: 18px; display: flex; justify-content: flex-end; }
+.link { color: var(--accent); font-size: 13.5px; font-weight: 600; text-decoration: none; }
+.link:hover { text-decoration: underline; }
+.legend { display: flex; gap: 14px; font-size: 13px; color: var(--text-2); }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.dot { display: inline-block; width: 8px; height: 8px; border-radius: 2px; flex: none; }
+.dot.in, .dot.good { background: var(--in); }
+.dot.out, .dot.bad { background: var(--out); }
+.dot.warn { background: var(--warn); }
+.dot.info { background: var(--info); }
+
+.grid-2 { display: grid; grid-template-columns: 1.5fr 1fr; gap: 16px; margin-bottom: 16px; }
+.grid-2.alt { grid-template-columns: 1fr 1.25fr; }
+.grid-2.even { grid-template-columns: 1fr 1fr; }
+.grid-2.solo, .grid-2.even > .card:only-child { grid-template-columns: 1fr; }
+
+/* ---------- Resumo do mês (o destaque da tela) ---------- */
+.summary { padding: 28px 30px 0; margin-bottom: 16px; overflow: hidden; }
+.summary-line {
+  font-family: var(--font-display);
+  font-size: clamp(25px, 3.1vw, 36px);
+  font-weight: 700;
+  letter-spacing: -.025em;
+  line-height: 1.12;
+  max-width: 30ch;
+}
+.summary-sub { margin-top: 8px; color: var(--text-2); font-size: 16px; }
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  margin: 26px -30px 0;
+  border-top: 1px solid var(--line);
+}
+.stats-4 { grid-template-columns: repeat(4, 1fr); }
+.summary.compact { padding: 0; }
+.summary.compact .stats { margin: 0; border-top: 0; }
+.stat { min-width: 0; padding: 18px 30px 20px; border-left: 1px solid var(--line); }
+.stat:first-child { border-left: 0; }
+.stat-label { display: flex; align-items: center; gap: 8px; color: var(--text-2); font-size: 13.5px; font-weight: 500; }
+.stat.in .stat-label::before, .stat.out .stat-label::before {
+  content: ""; width: 8px; height: 8px; border-radius: 2px; flex: none;
+}
+.stat.in .stat-label::before { background: var(--in); }
+.stat.out .stat-label::before { background: var(--out); }
+.stat-value {
+  display: block;
+  margin-top: 4px;
+  font-family: var(--font-display);
+  font-size: clamp(21px, 2.3vw, 28px);
+  font-weight: 650;
+  letter-spacing: -.02em;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.stats-4 .stat-value { font-size: clamp(19px, 1.9vw, 25px); }
+.stat-note { display: block; margin-top: 2px; font-size: 13px; color: var(--text-3); }
+.stat-note .good { color: var(--in); }
+.stat-note .bad { color: var(--out); }
+.stat.res .stat-value { color: var(--in); }
+.stat.res.neg .stat-value { color: var(--out); }
+.stat.res.zero .stat-value { color: var(--warn); }
+.status {
+  margin-left: auto;
+  padding: 1px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  background: var(--in-soft);
+  color: var(--in);
+}
+.stat.res.neg .status { background: var(--out-soft); color: var(--out); }
+.stat.res.zero .status { background: var(--warn-soft); color: var(--warn); }
+.stat.changed { animation: statFlash 1.6s ease; }
+@keyframes statFlash { 0%, 25% { background: var(--accent-soft); } 100% { background: transparent; } }
+
+/* ---------- Gráficos ---------- */
+.chart-host { position: relative; width: 100%; }
+.svg-chart { display: block; width: 100%; height: auto; overflow: visible; }
+.svg-chart text { fill: var(--text-3); font-family: var(--font); font-size: 11.5px; }
+.svg-chart .xlab.on { fill: var(--text); font-weight: 600; }
+.svg-chart .gridline { stroke: var(--grid); }
+.svg-chart .sel-bg { fill: var(--grid); }
+.bar { transform-box: fill-box; transform-origin: 50% 100%; animation: growY .6s cubic-bezier(.2, .8, .2, 1) both; }
+.bar.in { fill: var(--in); }
+.bar.out { fill: var(--out); }
+.hit { fill: transparent; cursor: pointer; }
+.clickable .hit:hover { fill: var(--grid); }
+.noanim .bar, .stack-bar.noanim, .noanim .rank-fill { animation: none; }
+@keyframes growY { from { transform: scaleY(0); } }
+
+.stack-bar {
+  display: flex;
+  gap: 2px;
+  height: 12px;
+  margin: 2px 0 14px;
+  border-radius: 3px;
+  overflow: hidden;
+  transform-origin: left;
+  animation: growX .7s cubic-bezier(.2, .8, .2, 1) both;
+}
+.stack-bar span { display: block; height: 100%; min-width: 3px; cursor: pointer; }
+.breakdown { list-style: none; margin: 0; padding: 0; }
+.breakdown li {
+  display: grid;
+  grid-template-columns: 9px 1fr auto 3.6ch;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 0;
+  border-top: 1px solid var(--line);
+  font-size: 14px;
+}
+.breakdown li:first-child { border-top: 0; }
+.breakdown .sw { width: 9px; height: 9px; border-radius: 2px; }
+.breakdown .n { min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.breakdown .v { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.breakdown .p { text-align: right; color: var(--text-3); font-variant-numeric: tabular-nums; }
+
+.rank { display: grid; gap: 14px; }
+.rank-top { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; margin-bottom: 6px; font-size: 14px; }
+.rank-top small { color: var(--text-3); margin-left: 6px; font-size: 12.5px; }
+.rank-top .v { white-space: nowrap; font-variant-numeric: tabular-nums; }
+.rank-top .v em { font-style: normal; color: var(--text-3); margin-left: 8px; font-size: 12.5px; }
+.rank-track { height: 6px; border-radius: 3px; background: var(--panel-2); overflow: hidden; }
+.rank-fill { height: 100%; border-radius: inherit; transform-origin: left; animation: growX .7s cubic-bezier(.2, .8, .2, 1) both; }
+.rank-fill.saida { background: var(--out); }
+.rank-fill.entrada { background: var(--in); }
+@keyframes growX { from { transform: scaleX(0); } }
+
+.tooltip {
+  position: fixed;
+  z-index: 300;
+  left: 0; top: 0;
+  padding: 9px 11px;
+  border-radius: 8px;
+  background: #06190f;
+  color: #eaf3ec;
+  border: 1px solid rgba(255, 255, 255, .1);
+  font-size: 12.5px;
+  line-height: 1.55;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transform: translate(-50%, calc(-100% - 12px));
+  transition: opacity .1s;
+}
+.tooltip.below { transform: translate(-50%, 18px); }
+.tooltip.show { opacity: 1; }
+.tooltip strong, .tooltip span { display: block; }
+.tooltip .t-in::before, .tooltip .t-out::before { content: ""; display: inline-block; width: 7px; height: 7px; margin-right: 6px; border-radius: 2px; }
+.tooltip .t-in::before { background: #5fdc98; }
+.tooltip .t-out::before { background: #ef8a7a; }
+
+/* ---------- Insights (frases simples) ---------- */
+.insight-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.insight-list li { display: flex; align-items: flex-start; gap: 10px; color: var(--text-2); font-size: 14.5px; }
+.insight-list li .dot { margin-top: 7px; }
+.insight-list li:first-child {
+  display: block;
+  padding-bottom: 12px;
+  margin-bottom: 2px;
+  border-bottom: 1px solid var(--line);
+  color: var(--text);
+  font-family: var(--font-display);
+  font-size: 19px;
+  font-weight: 600;
+  letter-spacing: -.01em;
+  line-height: 1.3;
+}
+.insight-list li:first-child .dot { display: none; }
+.insight-list b { color: var(--text); font-weight: 600; }
+
+/* ---------- Extrato (últimos lançamentos) ---------- */
+.mini-list { list-style: none; margin: 0; padding: 0; }
+.mini {
+  display: grid;
+  grid-template-columns: 40px 1fr auto;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 0;
+  border-top: 1px solid var(--line);
+}
+.mini:first-child { border-top: 0; padding-top: 0; }
+.mini-date { text-align: center; line-height: 1.05; color: var(--text-3); font-size: 11.5px; }
+.mini-date b { display: block; font-family: var(--font-display); font-size: 18px; font-weight: 600; color: var(--text-2); }
+.mini-txt { min-width: 0; }
+.mini-txt strong { display: block; font-size: 14.5px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.mini-txt small { color: var(--text-3); font-size: 12.5px; }
+.mini-val { white-space: nowrap; font-size: 14.5px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.val-in { color: var(--in); }
+.val-out { color: var(--out); }
+.flash, .flash td { animation: flash 2.2s ease; }
+@keyframes flash { 0%, 35% { background: var(--accent-soft); } 100% { background: transparent; } }
+
+.empty, .empty-mini { display: grid; place-items: center; gap: 10px; padding: 32px 16px; text-align: center; color: var(--text-3); }
+.empty .ic, .empty-mini .ic { width: 28px; height: 28px; opacity: .6; }
+.empty-line { color: var(--text-3); padding: 8px 0; }
+
+/* ---------- Lançamentos ---------- */
+.toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-bottom: 14px; }
+.search {
+  flex: 1 1 240px;
+  display: flex; align-items: center; gap: 8px;
+  height: 40px;
+  padding: 0 12px;
+  border-radius: 10px;
+  background: var(--input-bg);
+  border: 1px solid var(--line-strong);
+  color: var(--text-3);
+}
+.search:focus-within { border-color: var(--accent); }
+.search .ic { width: 17px; height: 17px; }
+.search input { flex: 1; min-width: 0; border: 0; outline: none; background: transparent; color: var(--text); font: inherit; font-size: 14.5px; }
+.search input::placeholder { color: var(--text-3); }
+.summary-strip {
+  display: flex; flex-wrap: wrap; gap: 6px 24px;
+  padding: 10px 0 12px;
+  border-bottom: 1px solid var(--line);
+  font-size: 13.5px;
+  color: var(--text-2);
+}
+.summary-strip strong { color: var(--text); font-weight: 600; font-variant-numeric: tabular-nums; }
+.summary-strip strong.val-in { color: var(--in); }
+.summary-strip strong.val-out { color: var(--out); }
+
+.table-wrap { overflow-x: auto; }
+.table { width: 100%; border-collapse: collapse; font-size: 14px; }
+.table th {
+  padding: 12px;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-3);
+  white-space: nowrap;
+}
+.table td { padding: 12px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+.table tbody tr:last-child td { border-bottom: 0; }
+.table tbody tr:hover td { background: var(--panel-2); }
+.table th:first-child, .table td:first-child { padding-left: 0; }
+.table .num { text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.td-date { white-space: nowrap; color: var(--text-2); font-variant-numeric: tabular-nums; }
+.td-desc strong { display: block; font-weight: 500; }
+.td-desc .obs { display: block; color: var(--text-3); font-size: 12.5px; }
+.m-meta { display: none; color: var(--text-3); font-size: 12.5px; }
+.td-cat small { display: block; color: var(--text-3); font-size: 12.5px; }
+.td-val { font-weight: 600; }
+.row-actions { display: flex; gap: 2px; justify-content: flex-end; }
+.badge { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: var(--text-2); white-space: nowrap; }
+.badge::before { content: ""; width: 7px; height: 7px; border-radius: 2px; }
+.badge.in::before { background: var(--in); }
+.badge.out::before { background: var(--out); }
+
+/* ---------- Categorias ---------- */
+.explain {
+  margin-bottom: 24px;
+  padding: 2px 0 2px 16px;
+  border-left: 3px solid var(--accent);
+  color: var(--text-2);
+  max-width: 72ch;
+}
+.explain strong { color: var(--text); }
+.cat-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: start; }
+.col-title { display: flex; align-items: center; gap: 9px; margin-bottom: 12px; font-family: var(--font-display); font-size: 19px; font-weight: 700; letter-spacing: -.01em; }
+.cat-card { margin-bottom: 14px; }
+.cat-head { display: flex; align-items: center; gap: 10px; }
+.cat-head h3 { flex: 1; min-width: 0; font-size: 16px; font-weight: 600; }
+.cat-meta { color: var(--text-3); font-size: 13px; white-space: nowrap; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 14px 0; }
+.chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 4px 4px 4px 11px;
+  border-radius: 8px;
+  background: var(--panel-2);
+  font-size: 13.5px;
+}
+.chip .count { color: var(--text-3); font-size: 12px; font-variant-numeric: tabular-nums; }
+.chip button {
+  width: 22px; height: 22px;
+  display: grid; place-items: center;
+  border: 0; border-radius: 6px;
+  background: transparent;
+  color: var(--text-3);
+  cursor: pointer;
+}
+.chip button .ic { width: 13px; height: 13px; }
+.chip button:hover { background: var(--out-soft); color: var(--out); }
+.add-sub { display: flex; gap: 8px; }
+.add-sub .input { padding: 8px 12px; font-size: 14px; }
+
+/* ---------- Relatórios ---------- */
+.filters { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; align-items: end; }
+.filters .seg { width: 100%; }
+.filters .seg button { flex: 1; padding: 7px 6px; }
+.filters-card { margin-bottom: 16px; }
+.table-sum td:first-child { font-weight: 500; }
+
+/* ---------- Dicas ---------- */
+.tips { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 0 40px; }
+.tip { padding: 18px 0; border-top: 1px solid var(--line); }
+.tip h3 { font-size: 16px; font-weight: 600; margin-bottom: 4px; }
+.tip p { color: var(--text-2); font-size: 14.5px; max-width: 46ch; }
+
+/* ---------- Configurações ---------- */
+.settings { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: start; }
+.stack { display: grid; gap: 16px; }
+.pref-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 14px 0; border-top: 1px solid var(--line); }
+.pref-row:first-of-type { border-top: 0; padding-top: 0; }
+.pref-row strong { display: block; font-size: 14.5px; font-weight: 600; }
+.pref-row small { color: var(--text-3); font-size: 13px; }
+.switch { position: relative; display: inline-block; width: 42px; height: 24px; flex: none; }
+.switch input { position: absolute; inset: 0; z-index: 1; margin: 0; opacity: 0; cursor: pointer; }
+.switch span { position: absolute; inset: 0; border-radius: 999px; background: var(--panel-3); transition: background .2s; }
+.switch span::after {
+  content: "";
+  position: absolute;
+  top: 3px; left: 3px;
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  background: #fff;
+  transition: transform .2s;
+}
+.switch input:checked + span { background: var(--accent); }
+.switch input:checked + span::after { transform: translateX(18px); }
+.switch input:focus-visible + span { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* ---------- Modais ---------- */
+.modal { position: fixed; inset: 0; z-index: 100; display: grid; place-items: center; padding: 20px; }
+.modal-backdrop { position: absolute; inset: 0; background: var(--overlay); animation: fadeIn .15s ease; }
+.modal-card {
+  position: relative;
+  width: min(560px, 100%);
+  max-height: calc(100vh - 40px);
+  max-height: calc(100dvh - 40px);
+  overflow: auto;
+  padding: 22px;
+  border-radius: 16px;
+  background: var(--panel);
+  border: 1px solid var(--line-strong);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, .35);
+  animation: popIn .18s ease-out;
+}
+.modal-card.narrow { width: min(430px, 100%); }
+.modal-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 18px; }
+.modal-head h2 { font-family: var(--font-display); font-size: 21px; font-weight: 700; letter-spacing: -.02em; }
+.modal-text { color: var(--text-2); }
+.modal-foot { display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; }
+.sheet-nav { display: grid; }
+.sheet-nav a {
+  display: flex; align-items: center; gap: 14px;
+  padding: 14px 6px;
+  border-top: 1px solid var(--line);
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 500;
+}
+.sheet-nav a:first-child { border-top: 0; }
+.sheet-nav a .ic { color: var(--text-3); }
+.sheet-nav a.active .ic { color: var(--accent); }
+.sheet-handle { width: 40px; height: 4px; margin: -6px auto 12px; border-radius: 999px; background: var(--line-strong); }
+.sheet-tagline { margin-top: 12px; padding: 0 6px; font-size: 13px; color: var(--text-3); }
+@keyframes fadeIn { from { opacity: 0; } }
+@keyframes popIn { from { opacity: 0; transform: translateY(6px); } }
+@keyframes slideUp { from { transform: translateY(100%); } }
+
+/* ---------- Avisos ---------- */
+.toasts {
+  position: fixed;
+  right: 20px;
+  bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+  z-index: 200;
+  display: grid;
+  gap: 8px;
+  pointer-events: none;
+}
+.toast {
+  display: flex; align-items: center; gap: 10px;
+  max-width: 380px;
+  padding: 11px 14px;
+  border-radius: 10px;
+  background: var(--text);
+  color: var(--bg);
+  font-size: 14px;
+  font-weight: 500;
+  pointer-events: auto;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, .25);
+  animation: toastIn .2s ease-out;
+  transition: opacity .25s, transform .25s;
+}
+.toast .ic { width: 17px; height: 17px; }
+.toast.out { opacity: 0; transform: translateY(6px); }
+@keyframes toastIn { from { opacity: 0; transform: translateY(8px); } }
+
+/* ---------- Responsivo ---------- */
+@media (max-width: 1150px) {
+  .grid-2, .grid-2.alt, .grid-2.even { grid-template-columns: 1fr; }
+  .stats-4 { grid-template-columns: repeat(2, 1fr); }
+  .stats-4 .stat:nth-child(3) { border-left: 0; }
+  .stats-4 .stat:nth-child(n + 3) { border-top: 1px solid var(--line); }
+}
+
+@media (max-width: 900px) {
+  .sidebar { display: none; }
+  .main { margin-left: 0; padding: 18px 16px calc(100px + env(safe-area-inset-bottom, 0px)); }
+  .hide-mobile { display: none !important; }
+
+  .mobile-top {
+    position: sticky;
+    top: env(safe-area-inset-top, 0px);
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 11px 16px;
+    background: var(--bg);
+    border-bottom: 1px solid var(--line);
+  }
+  .mobile-top .brand { padding: 0; color: var(--text); }
+  .mobile-top .brand-name { font-size: 19px; }
+  .mobile-top .brand-name b { color: var(--accent); }
+  .mobile-top .logo-mark { width: 26px; height: 26px; }
+
+  .bottom-nav {
+    position: fixed;
+    left: 0; right: 0; bottom: 0;
+    z-index: 40;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    align-items: center;
+    padding: 6px 6px calc(6px + env(safe-area-inset-bottom, 0px));
+    background: var(--side-bg);
+    border-top: 1px solid var(--side-line);
+  }
+  .bn-item {
+    display: flex; flex-direction: column; align-items: center; gap: 2px;
+    padding: 6px 0;
+    border: 0;
+    background: none;
+    color: var(--side-muted);
+    font-size: 11px;
+    font-weight: 500;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  .bn-item.active { color: #fff; }
+  .bn-item.active .ic { color: var(--mint); }
+  .bn-fab {
+    justify-self: center;
+    width: 48px; height: 48px;
+    display: grid; place-items: center;
+    border: 0;
+    border-radius: 14px;
+    background: var(--mint);
+    color: #072018;
+    cursor: pointer;
+  }
+  .bn-fab .ic { width: 22px; height: 22px; stroke-width: 2.2; }
+
+  .modal { place-items: end center; padding: 0; }
+  .modal-card, .modal-card.narrow {
+    width: 100%;
+    max-height: 92vh;
+    max-height: 92dvh;
+    border-radius: 16px 16px 0 0;
+    padding-bottom: calc(22px + env(safe-area-inset-bottom, 0px));
+    animation: slideUp .25s cubic-bezier(.2, .9, .3, 1);
+  }
+  .toasts { left: 16px; right: 16px; bottom: calc(80px + env(safe-area-inset-bottom, 0px)); }
+  .toast { max-width: none; }
+}
+
+@media (max-width: 720px) {
+  .page-head { margin-bottom: 16px; align-items: flex-start; }
+  .head-actions { width: 100%; }
+  .head-actions .select-pill { flex: 1; }
+  .head-actions .select-pill select { width: 100%; }
+  .card { padding: 18px 16px; }
+  .summary { padding: 22px 18px 0; }
+  .summary-sub { font-size: 15px; }
+  .stats { grid-template-columns: 1fr 1fr; margin: 20px -18px 0; }
+  .stat { padding: 14px 18px 16px; }
+  .stats:not(.stats-4) .stat.res { grid-column: 1 / -1; border-left: 0; border-top: 1px solid var(--line); }
+  .summary.compact .stats { margin: 0; }
+  .stat-value { font-size: clamp(18px, 5.4vw, 24px); }
+  .stat-note { font-size: 12.5px; }
+  .cat-cols, .settings, .form-grid { grid-template-columns: 1fr; }
+  .toolbar .select-pill { flex: 1 1 auto; }
+  .toolbar .select-pill select { width: 100%; }
+  .toolbar .seg { flex: 1 1 100%; }
+  .toolbar .seg button { flex: 1; }
+  .input, .field input, .field select, .field textarea, .search input { font-size: 16px; }
+
+  .table-lanc thead { display: none; }
+  .table-lanc, .table-lanc tbody { display: block; }
+  .table-lanc tr {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-areas: "desc val" "desc acts";
+    gap: 4px 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .table-lanc tbody tr:last-child { border-bottom: 0; }
+  .table-lanc td { padding: 0; border: 0; background: none !important; }
+  .table-lanc .td-date, .table-lanc .td-cat, .table-lanc .td-type { display: none; }
+  .table-lanc .td-desc { grid-area: desc; min-width: 0; }
+  .table-lanc .td-val { grid-area: val; }
+  .table-lanc .td-acts { grid-area: acts; }
+  .table-lanc .m-meta { display: block; }
+  .table-lanc tr.flash { animation: flash 2.2s ease; }
+}
+
+@media (max-width: 380px) {
+  .stats, .stats-4 { grid-template-columns: 1fr; }
+  .stat { border-left: 0 !important; border-top: 1px solid var(--line); }
+  .stat:first-child { border-top: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+}
+
+/* =========================================================
+   Acesso: primeiro login / entrar
+   ========================================================= */
+.auth { min-height: 100vh; display: grid; grid-template-columns: minmax(340px, .9fr) 1.1fr; }
+.auth-brand {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  padding: calc(34px + env(safe-area-inset-top, 0px)) 48px calc(30px + env(safe-area-inset-bottom, 0px));
+  background: var(--side-bg);
+  color: #fff;
+}
+.auth-brand .brand { padding: 0; }
+.auth-pitch { margin: auto 0; }
+.auth-headline {
+  font-family: var(--font-display);
+  font-size: clamp(32px, 3.6vw, 46px);
+  font-weight: 700;
+  letter-spacing: -.03em;
+  line-height: 1.06;
+  max-width: 14ch;
+}
+.auth-headline span { color: var(--mint); }
+.auth-points { list-style: none; margin: 30px 0 0; padding: 0; display: grid; gap: 12px; color: var(--side-text); font-size: 15.5px; }
+.auth-points li { position: relative; padding-left: 20px; }
+.auth-points li::before { content: ""; position: absolute; left: 0; top: .55em; width: 8px; height: 8px; border-radius: 2px; background: var(--mint); }
+.auth-foot { color: var(--side-muted); font-size: 13px; }
+.auth-main { display: grid; place-items: center; padding: 48px 24px; }
+.auth-panel { width: min(400px, 100%); }
+.auth-panel h1 { font-family: var(--font-display); font-size: 32px; font-weight: 700; letter-spacing: -.025em; line-height: 1.1; }
+.auth-panel .sub { margin: 6px 0 26px; }
+.auth-step { margin-bottom: 8px; color: var(--accent); font-size: 13px; font-weight: 600; }
+.btn-block { width: 100%; margin-top: 22px; padding: 12px 16px; font-size: 15px; }
+.btn:disabled { opacity: .6; cursor: progress; }
+.auth-actions { display: flex; gap: 10px; margin-top: 22px; }
+.auth-actions .btn { flex: 1; padding: 12px 16px; font-size: 15px; }
+.auth-switch { margin-top: 20px; text-align: center; color: var(--text-2); font-size: 14px; }
+.link-btn { padding: 0; border: 0; background: none; color: var(--accent); font: inherit; font-weight: 600; cursor: pointer; }
+.link-btn:hover { text-decoration: underline; }
+
+.user-row { display: flex; align-items: center; gap: 4px; border-top: 1px solid var(--side-line); }
+.user-row .user-chip { flex: 1; min-width: 0; border-top: 0; }
+.side-out { color: var(--side-muted); }
+.side-out:hover { color: #fff; background: rgba(255, 255, 255, .06); }
+.sheet-nav button {
+  display: flex; align-items: center; gap: 14px;
+  width: 100%;
+  padding: 14px 6px;
+  border: 0;
+  border-top: 1px solid var(--line);
+  background: none;
+  color: var(--out);
+  font: inherit;
+  font-size: 16px;
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
+}
+.sheet-nav button .ic { color: var(--out); }
+.sum-cta { margin-top: 18px; }
+.chart-empty {
+  display: grid;
+  place-items: center;
+  min-height: 200px;
+  padding: 24px;
+  border: 1px dashed var(--line-strong);
+  border-radius: 10px;
+  color: var(--text-3);
+  text-align: center;
+}
+
+@media (max-width: 900px) {
+  .auth { grid-template-columns: 1fr; align-content: start; }
+  .auth-brand { gap: 16px; padding: calc(20px + env(safe-area-inset-top, 0px)) 20px 22px; }
+  .auth-pitch { margin: 0; }
+  .auth-headline { font-size: 26px; max-width: none; }
+  .auth-points, .auth-foot { display: none; }
+  .auth-main { place-items: start center; padding: 28px 20px calc(40px + env(safe-area-inset-bottom, 0px)); }
+  .auth-panel h1 { font-size: 27px; }
+}
+
+.stat.res.vazio .stat-value { color: var(--text); }
+.insight-list li:only-child { padding-bottom: 0; margin-bottom: 0; border-bottom: 0; }
+
+</style>
 </head>
 <body>
-<div class="app">
+
+<!-- ============ ACESSO: primeiro login / entrar ============ -->
+<div class="auth" id="auth" hidden>
+  <aside class="auth-brand">
+    <div class="brand">
+      <svg class="logo-mark" viewBox="0 0 40 40" aria-hidden="true"><rect x="4" y="25" width="7" height="11" rx="1.6" fill="#57e39b" opacity=".6"/><rect x="14.5" y="19" width="7" height="17" rx="1.6" fill="#57e39b" opacity=".8"/><rect x="25" y="13" width="7" height="23" rx="1.6" fill="#57e39b"/><path d="M3 18 13 11l6 4 14-10" fill="none" stroke="#57e39b" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M27 4.5h6.5V11" fill="none" stroke="#57e39b" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span class="brand-name">Organiza<b>MEI</b></span>
+    </div>
+    <div class="auth-pitch">
+      <p class="auth-headline">Seu negócio organizado.<br><span>Suas decisões mais claras.</span></p>
+      <ul class="auth-points">
+        <li>Lance entradas e saídas em poucos segundos.</li>
+        <li>Veja na hora se o mês está no azul ou no vermelho.</li>
+        <li>Entenda para onde o dinheiro do negócio está indo.</li>
+      </ul>
+    </div>
+    <p class="auth-foot">Cada conta guarda os próprios dados neste navegador.</p>
+  </aside>
+
+  <main class="auth-main">
+    <section class="auth-panel" data-auth-panel="login" aria-labelledby="t-login">
+      <h1 id="t-login">Entrar</h1>
+      <p class="sub">Use o e-mail e a senha que você cadastrou.</p>
+      <div class="form-stack">
+        <label class="field"><span>E-mail</span><input type="email" id="aLoginEmail" autocomplete="username" inputmode="email"></label>
+        <label class="field"><span>Senha</span><input type="password" id="aLoginSenha" autocomplete="current-password"></label>
+      </div>
+      <p class="form-error" id="aLoginErr" role="alert"></p>
+      <button class="btn btn-primary btn-block" type="button" data-auth="login">Entrar</button>
+      <p class="auth-switch">Primeiro acesso? <button class="link-btn" type="button" data-auth="goto-signup">Criar conta</button></p>
+    </section>
+
+    <section class="auth-panel" data-auth-panel="signup1" aria-labelledby="t-s1" hidden>
+      <p class="auth-step">Passo 1 de 2</p>
+      <h1 id="t-s1">Crie sua conta</h1>
+      <p class="sub">Leva menos de um minuto. Você começa com tudo em branco.</p>
+      <div class="form-stack">
+        <label class="field"><span>Seu nome</span><input id="aNome" maxlength="40" autocomplete="name"></label>
+        <label class="field"><span>E-mail</span><input type="email" id="aEmail" maxlength="80" autocomplete="email" inputmode="email"></label>
+        <label class="field"><span>Senha <em>(mínimo de 6 caracteres)</em></span><input type="password" id="aSenha" autocomplete="new-password"></label>
+      </div>
+      <p class="form-error" id="aErr1" role="alert"></p>
+      <button class="btn btn-primary btn-block" type="button" data-auth="next">Continuar</button>
+      <p class="auth-switch" data-has-accounts>Já tem conta? <button class="link-btn" type="button" data-auth="goto-login">Entrar</button></p>
+    </section>
+
+    <section class="auth-panel" data-auth-panel="signup2" aria-labelledby="t-s2" hidden>
+      <p class="auth-step">Passo 2 de 2</p>
+      <h1 id="t-s2">Sobre o seu negócio</h1>
+      <p class="sub">Essas informações aparecem no seu painel. Dá para mudar depois em Configurações.</p>
+      <div class="form-stack">
+        <label class="field"><span>Nome do negócio</span><input id="aNegocio" maxlength="50" autocomplete="organization" placeholder="Ex.: Ateliê da Ana"></label>
+        <label class="field"><span>Moeda</span>
+          <select id="aMoeda">
+            <option value="BRL">Real (R$)</option>
+            <option value="USD">Dólar (US$)</option>
+            <option value="EUR">Euro (€)</option>
+          </select>
+        </label>
+      </div>
+      <p class="form-error" id="aErr2" role="alert"></p>
+      <div class="auth-actions">
+        <button class="btn btn-ghost" type="button" data-auth="back">Voltar</button>
+        <button class="btn btn-primary" type="button" data-auth="create">Começar a usar</button>
+      </div>
+    </section>
+  </main>
+</div>
+
+<div class="app" id="app" hidden>
 
   <!-- ============ Barra lateral (computador) ============ -->
   <aside class="sidebar" aria-label="Menu principal">
@@ -19,7 +1053,6 @@
       <svg class="logo-mark" viewBox="0 0 40 40" aria-hidden="true"><rect x="4" y="25" width="7" height="11" rx="1.6" fill="#57e39b" opacity=".6"/><rect x="14.5" y="19" width="7" height="17" rx="1.6" fill="#57e39b" opacity=".8"/><rect x="25" y="13" width="7" height="23" rx="1.6" fill="#57e39b"/><path d="M3 18 13 11l6 4 14-10" fill="none" stroke="#57e39b" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M27 4.5h6.5V11" fill="none" stroke="#57e39b" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
       <span class="brand-name">Organiza<b>MEI</b></span>
     </a>
-    <p class="brand-motto">Planeje · Controle · Cresça</p>
 
     <nav class="nav">
       <a class="nav-item" href="#inicio" data-route="inicio"><i data-icon="home"></i><span>Início</span></a>
@@ -31,11 +1064,14 @@
     </nav>
 
     <div class="sidebar-foot">
-      <p class="tagline">Seu negócio organizado.<br><span>Suas decisões mais claras.</span></p>
-      <a class="user-chip" href="#configuracoes" data-route="configuracoes">
-        <span class="avatar" data-avatar>M</span>
-        <span class="user-txt"><strong data-user>Maria</strong><small data-biz>Ateliê da Maria</small></span>
-      </a>
+      <p class="tagline">Seu negócio organizado.<br>Suas decisões mais claras.</p>
+      <div class="user-row">
+        <a class="user-chip" href="#configuracoes" data-route="configuracoes">
+          <span class="avatar" data-avatar></span>
+          <span class="user-txt"><strong data-user></strong><small data-biz></small></span>
+        </a>
+        <button class="icon-btn side-out" type="button" data-action="logout" aria-label="Sair da conta" title="Sair"><i data-icon="logout"></i></button>
+      </div>
     </div>
   </aside>
 
@@ -45,7 +1081,7 @@
       <svg class="logo-mark" viewBox="0 0 40 40" aria-hidden="true"><rect x="4" y="25" width="7" height="11" rx="1.6" fill="#57e39b" opacity=".6"/><rect x="14.5" y="19" width="7" height="17" rx="1.6" fill="#57e39b" opacity=".8"/><rect x="25" y="13" width="7" height="23" rx="1.6" fill="#57e39b"/><path d="M3 18 13 11l6 4 14-10" fill="none" stroke="#57e39b" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M27 4.5h6.5V11" fill="none" stroke="#57e39b" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
       <span class="brand-name">Organiza<b>MEI</b></span>
     </a>
-    <a class="avatar sm" href="#configuracoes" data-route="configuracoes" data-avatar aria-label="Configurações">M</a>
+    <a class="avatar sm" href="#configuracoes" data-route="configuracoes" data-avatar aria-label="Configurações"></a>
   </header>
 
   <main class="main" id="main">
@@ -54,7 +1090,7 @@
     <section class="view" data-view="inicio" aria-labelledby="t-inicio">
       <div class="page-head">
         <div>
-          <h1 id="t-inicio">Olá, <span id="helloName">Maria</span>!</h1>
+          <h1 id="t-inicio">Olá, <span id="helloName"></span>!</h1>
           <p class="sub" id="helloSub">Este é o resumo do seu negócio neste mês.</p>
         </div>
         <div class="head-actions">
@@ -63,23 +1099,16 @@
         </div>
       </div>
 
-      <div class="kpis">
-        <article class="kpi kpi-in" id="kpiIn">
-          <div class="kpi-top"><span class="kpi-icon"><i data-icon="up"></i></span>Entradas</div>
-          <div class="kpi-value" id="kIn">R$ 0,00</div>
-          <div class="kpi-delta" id="kInDelta"></div>
-        </article>
-        <article class="kpi kpi-out" id="kpiOut">
-          <div class="kpi-top"><span class="kpi-icon"><i data-icon="down"></i></span>Saídas</div>
-          <div class="kpi-value" id="kOut">R$ 0,00</div>
-          <div class="kpi-delta" id="kOutDelta"></div>
-        </article>
-        <article class="kpi kpi-res" id="kpiRes">
-          <div class="kpi-top"><span class="kpi-icon"><i data-icon="wallet"></i></span>Resultado<span class="status" id="kStatus">—</span></div>
-          <div class="kpi-value" id="kRes">R$ 0,00</div>
-          <div class="kpi-delta" id="kResDelta"></div>
-        </article>
-      </div>
+      <article class="card summary">
+        <p class="summary-line" id="sumLine"></p>
+        <p class="summary-sub" id="sumSub"></p>
+        <button class="btn btn-primary sum-cta" type="button" data-action="new" id="sumCta" hidden><i data-icon="plus"></i>Fazer o primeiro lançamento</button>
+        <div class="stats">
+          <div class="stat in" id="kpiIn"><span class="stat-label">Entradas</span><span class="stat-value" id="kIn">R$ 0,00</span><span class="stat-note" id="kInDelta"></span></div>
+          <div class="stat out" id="kpiOut"><span class="stat-label">Saídas</span><span class="stat-value" id="kOut">R$ 0,00</span><span class="stat-note" id="kOutDelta"></span></div>
+          <div class="stat res" id="kpiRes"><span class="stat-label">Resultado<span class="status" id="kStatus"></span></span><span class="stat-value" id="kRes">R$ 0,00</span><span class="stat-note" id="kResDelta"></span></div>
+        </div>
+      </article>
 
       <div class="grid-2">
         <article class="card">
@@ -87,6 +1116,7 @@
             <h3>Entradas x Saídas</h3>
             <div class="legend"><span><i class="dot in"></i>Entradas</span><span><i class="dot out"></i>Saídas</span></div>
           </header>
+          <p class="card-note hide-mobile" id="dashBarsNote">Clique em um mês para ver o resumo dele.</p>
           <div class="chart-host clickable" id="dashBars"></div>
         </article>
         <article class="card">
@@ -94,25 +1124,23 @@
             <h3>Principais despesas</h3>
             <a class="link" href="#relatorios" data-route="relatorios">Ver relatório</a>
           </header>
-          <div class="chart-host donut-wrap" id="dashDonut"></div>
+          <div class="chart-host" id="dashDonut"></div>
         </article>
       </div>
 
-      <article class="insight" id="dashInsight">
-        <span class="insight-icon"><i data-icon="bulb"></i></span>
-        <div>
-          <h3>Insight do seu negócio</h3>
+      <div class="grid-2 alt" id="dashBottom">
+        <article class="card" id="dashInsight">
+          <header class="card-head"><h3>Insight do seu negócio</h3></header>
           <ul class="insight-list" id="insightList"></ul>
-        </div>
-      </article>
-
-      <article class="card">
-        <header class="card-head">
-          <h3>Últimos lançamentos</h3>
-          <a class="link" href="#lancamentos" data-route="lancamentos">Ver todos</a>
-        </header>
-        <ul class="mini-list" id="recentList"></ul>
-      </article>
+        </article>
+        <article class="card">
+          <header class="card-head">
+            <h3>Últimos lançamentos</h3>
+            <a class="link" href="#lancamentos" data-route="lancamentos">Ver todos</a>
+          </header>
+          <ul class="mini-list" id="recentList"></ul>
+        </article>
+      </div>
     </section>
 
     <!-- ============ LANÇAMENTOS ============ -->
@@ -162,10 +1190,7 @@
         <button class="btn btn-primary" type="button" data-action="new-cat"><i data-icon="plus"></i>Nova categoria</button>
       </div>
 
-      <article class="card explain">
-        <span class="insight-icon green"><i data-icon="check"></i></span>
-        <p><strong>Classificação automática.</strong> Ao escolher a categoria e a subcategoria em um lançamento, o OrganizaMEI já sabe se é entrada ou saída e onde ele aparece nos relatórios. É a lógica do PROCV, sem precisar de fórmula.</p>
-      </article>
+      <p class="explain"><strong>Classificação automática.</strong> Ao escolher a categoria e a subcategoria em um lançamento, o OrganizaMEI já sabe se é entrada ou saída e onde ele aparece nos relatórios. É a lógica do PROCV, sem precisar de fórmula.</p>
 
       <div class="cat-cols">
         <div>
@@ -205,25 +1230,14 @@
         </div>
       </article>
 
-      <div class="kpis kpis-4">
-        <article class="kpi kpi-in">
-          <div class="kpi-top"><span class="kpi-icon"><i data-icon="up"></i></span>Total de entradas</div>
-          <div class="kpi-value" id="rIn">R$ 0,00</div>
-        </article>
-        <article class="kpi kpi-out">
-          <div class="kpi-top"><span class="kpi-icon"><i data-icon="down"></i></span>Total de saídas</div>
-          <div class="kpi-value" id="rOut">R$ 0,00</div>
-        </article>
-        <article class="kpi kpi-res" id="rResCard">
-          <div class="kpi-top"><span class="kpi-icon"><i data-icon="wallet"></i></span>Resultado<span class="status" id="rStatus">—</span></div>
-          <div class="kpi-value" id="rRes">R$ 0,00</div>
-        </article>
-        <article class="kpi kpi-margin">
-          <div class="kpi-top"><span class="kpi-icon"><i data-icon="percent"></i></span>Margem</div>
-          <div class="kpi-value" id="rMargem">—</div>
-          <div class="kpi-delta">Quanto de cada R$ 1 que entra vira resultado</div>
-        </article>
-      </div>
+      <article class="card summary compact">
+        <div class="stats stats-4">
+          <div class="stat in"><span class="stat-label">Total de entradas</span><span class="stat-value" id="rIn">R$ 0,00</span></div>
+          <div class="stat out"><span class="stat-label">Total de saídas</span><span class="stat-value" id="rOut">R$ 0,00</span></div>
+          <div class="stat res" id="rResCard"><span class="stat-label">Resultado<span class="status" id="rStatus"></span></span><span class="stat-value" id="rRes">R$ 0,00</span></div>
+          <div class="stat"><span class="stat-label">Margem</span><span class="stat-value" id="rMargem">—</span><span class="stat-note">De cada R$ 1 que entra, quanto sobra</span></div>
+        </div>
+      </article>
 
       <article class="card" style="margin-bottom:16px">
         <header class="card-head">
@@ -266,12 +1280,9 @@
         </div>
       </div>
 
-      <article class="insight">
-        <span class="insight-icon"><i data-icon="bulb"></i></span>
-        <div>
-          <h3 id="dInsTitle">Insights do seu negócio</h3>
-          <ul class="insight-list" id="dInsList"></ul>
-        </div>
+      <article class="card">
+        <header class="card-head"><h3 id="dInsTitle">Insights do seu negócio</h3></header>
+        <ul class="insight-list" id="dInsList"></ul>
       </article>
 
       <h2 class="section-title">Dicas para MEIs</h2>
@@ -322,11 +1333,12 @@
           </article>
 
           <article class="card">
-            <h3 class="card-title">Dados</h3>
-            <p class="muted sm">Os lançamentos ficam salvos neste navegador. Antes de apresentar, restaure os dados de exemplo para começar do zero.</p>
+            <h3 class="card-title">Conta</h3>
+            <p class="muted sm">Seus dados ficam salvos neste navegador, separados dos de qualquer outra conta criada aqui.</p>
             <div class="btn-row">
-              <button class="btn btn-ghost" type="button" id="sReset">Restaurar dados de exemplo</button>
-              <button class="btn btn-danger" type="button" id="sClear">Apagar lançamentos</button>
+              <button class="btn btn-ghost" type="button" id="sLogout"><i data-icon="logout"></i>Sair da conta</button>
+              <button class="btn btn-ghost" type="button" id="sClear">Apagar lançamentos</button>
+              <button class="btn btn-danger" type="button" id="sDelete">Excluir conta</button>
             </div>
           </article>
         </div>
@@ -419,14 +1431,1348 @@
       <a href="#categorias" data-route="categorias"><i data-icon="folder"></i>Categorias</a>
       <a href="#dicas" data-route="dicas"><i data-icon="bulb"></i>Dicas e insights</a>
       <a href="#configuracoes" data-route="configuracoes"><i data-icon="gear"></i>Configurações</a>
+      <button type="button" data-action="logout"><i data-icon="logout"></i>Sair da conta</button>
     </nav>
-    <p class="sheet-tagline">Seu negócio organizado. <span>Suas decisões mais claras.</span></p>
+    <p class="sheet-tagline">Seu negócio organizado. Suas decisões mais claras.</p>
   </div>
 </div>
 
 <div class="toasts" id="toasts" aria-live="polite"></div>
 <div class="tooltip" id="tooltip" role="tooltip"></div>
 
-<script src="script.js"></script>
+<script>
+/* =========================================================
+   OrganizaMEI — lógica do app
+   Fluxo: EU LANÇO OS DADOS → O SISTEMA CALCULA → O DASHBOARD ATUALIZA
+   ========================================================= */
+(() => {
+  'use strict';
+
+  /* ---------- Atalhos ---------- */
+  const $ = (sel, el = document) => el.querySelector(sel);
+  const $$ = (sel, el = document) => Array.from(el.querySelectorAll(sel));
+  const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+  const norm = (s) => String(s ?? '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+  const uid = () => Math.random().toString(36).slice(2, 8) + Date.now().toString(36).slice(-4);
+  const reduceMotion = () => !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+  const finePointer = () => !!(window.matchMedia && window.matchMedia('(pointer: fine)').matches);
+
+  /* ---------- Datas ---------- */
+  const MESES = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+  const MESES_ABREV = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+  const pad = (n) => String(n).padStart(2, '0');
+  const toISO = (d) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+  const monthKeyOf = (d) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}`;
+  const monthOf = (iso) => iso.slice(0, 7);
+  const addMonths = (key, n) => { const [y, m] = key.split('-').map(Number); return monthKeyOf(new Date(y, m - 1 + n, 1)); };
+  const daysIn = (key) => { const [y, m] = key.split('-').map(Number); return new Date(y, m, 0).getDate(); };
+  const monthLabel = (key) => `${MESES[Number(key.slice(5, 7)) - 1]}/${key.slice(0, 4)}`;
+  const monthShort = (key) => MESES_ABREV[Number(key.slice(5, 7)) - 1];
+  const fmtDate = (iso) => iso.split('-').reverse().join('/');
+  const CUR = monthKeyOf(new Date());
+
+  /* ---------- Configuração inicial de cada conta ---------- */
+  const PALETTE = ['#5fdc98', '#e7b95a', '#7cc7d9', '#e39a7a', '#b9a3e3'];
+  const COR_OUTROS = '#7f9a8c';
+
+  const DEFAULT_SETTINGS = {
+    negocio: '',
+    usuario: '',
+    email: '',
+    moeda: 'BRL',
+    tema: 'escuro',
+    insights: true,
+  };
+
+  // Categorias padrão: só a estrutura, sem nenhum lançamento.
+  function defaultCategorias() {
+    return [
+      { id: 'cat-receitas', nome: 'Receitas', tipo: 'entrada', subs: [
+        { id: 'sub-vendas', nome: 'Vendas' },
+        { id: 'sub-servicos', nome: 'Serviços' },
+        { id: 'sub-outras-rec', nome: 'Outras receitas' },
+      ] },
+      { id: 'cat-despesas', nome: 'Despesas', tipo: 'saida', subs: [
+        { id: 'sub-fornecedores', nome: 'Fornecedores' },
+        { id: 'sub-aluguel', nome: 'Aluguel' },
+        { id: 'sub-marketing', nome: 'Marketing' },
+        { id: 'sub-transporte', nome: 'Transporte' },
+        { id: 'sub-funcionarios', nome: 'Funcionários/Freelancers' },
+        { id: 'sub-impostos', nome: 'Impostos' },
+        { id: 'sub-outras-desp', nome: 'Outras despesas' },
+      ] },
+    ];
+  }
+
+  /* ---------- Contas e armazenamento ----------
+     Tudo fica no localStorage deste navegador. Cada conta tem a sua
+     própria chave de dados, então uma pessoa nunca sobrescreve a outra. */
+  const KEY_CONTAS = 'organizamei:v3:contas';
+  const KEY_SESSAO = 'organizamei:v3:sessao';
+  const keyDados = (id) => `organizamei:v3:dados:${id}`;
+  const store = {
+    get(k) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : null; } catch (e) { return null; } },
+    set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); return true; } catch (e) { return false; } },
+    del(k) { try { localStorage.removeItem(k); } catch (e) { /* nada a fazer */ } },
+  };
+  // Remove as versões antigas, que tinham dados de exemplo
+  ['organizamei:v1', 'organizamei:v2'].forEach((k) => store.del(k));
+
+  const getContas = () => { const a = store.get(KEY_CONTAS); return Array.isArray(a) ? a : []; };
+  const salvarContas = (a) => store.set(KEY_CONTAS, a);
+  const normEmail = (e) => String(e || '').trim().toLowerCase();
+  const emailValido = (e) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);
+
+  function emptyState(settings) {
+    return { settings: { ...DEFAULT_SETTINGS, ...(settings || {}) }, categorias: defaultCategorias(), lancamentos: [] };
+  }
+  function loadUserData(id) {
+    const s = store.get(keyDados(id));
+    if (!s || !Array.isArray(s.lancamentos) || !Array.isArray(s.categorias)) return null;
+    s.settings = { ...DEFAULT_SETTINGS, ...(s.settings || {}) };
+    return s;
+  }
+
+  let state = emptyState();
+  let currentId = null;
+  let avisouArmazenamento = false;
+  function persist() {
+    if (!currentId) return;
+    if (!store.set(keyDados(currentId), state) && !avisouArmazenamento) {
+      avisouArmazenamento = true;
+      toast('Este navegador não deixou salvar. Os dados ficam só até você fechar a página.', 'bad');
+    }
+  }
+
+  /* ---------- Senha: guardada como hash, nunca em texto puro ---------- */
+  const toHex = (buf) => Array.from(new Uint8Array(buf)).map((b) => b.toString(16).padStart(2, '0')).join('');
+  function novoSalt() {
+    const a = new Uint8Array(16);
+    if (window.crypto && crypto.getRandomValues) crypto.getRandomValues(a);
+    else for (let i = 0; i < a.length; i++) a[i] = Math.floor(Math.random() * 256);
+    return toHex(a);
+  }
+  async function hashSenha(senha, salt) {
+    if (window.crypto && crypto.subtle) {
+      const enc = new TextEncoder();
+      const key = await crypto.subtle.importKey('raw', enc.encode(senha), 'PBKDF2', false, ['deriveBits']);
+      const bits = await crypto.subtle.deriveBits({ name: 'PBKDF2', salt: enc.encode(salt), iterations: 120000, hash: 'SHA-256' }, key, 256);
+      return `pbkdf2:${toHex(bits)}`;
+    }
+    // Navegador sem Web Crypto: hash simples, só para não guardar a senha em texto
+    let h = 2166136261;
+    const str = salt + senha;
+    for (let i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 16777619); }
+    return `fnv:${(h >>> 0).toString(16)}`;
+  }
+
+  const ui = {
+    route: 'inicio',
+    dashMonth: CUR,
+    lancMonth: CUR,
+    lancTipo: 'todos',
+    lancBusca: '',
+    rep: { periodo: 'ult-6', de: '', ate: '', cat: 'todas', tipo: 'todos' },
+    ncTipo: 'saida',
+    editingId: null,
+    lastId: null,
+  };
+
+  /* ---------- Formatação ---------- */
+  let fmtMoney, fmtCompact;
+  const fmtPct = new Intl.NumberFormat('pt-BR', { style: 'percent', maximumFractionDigits: 0 });
+  function setFormatters() {
+    try {
+      fmtMoney = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: state.settings.moeda || 'BRL' });
+    } catch (e) {
+      fmtMoney = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
+    }
+    fmtCompact = new Intl.NumberFormat('pt-BR', { notation: 'compact', maximumFractionDigits: 1 });
+  }
+  const money = (cents) => fmtMoney.format(cents / 100);
+  const compact = (cents) => fmtCompact.format(cents / 100);
+  const pct = (v) => fmtPct.format(v);
+
+  /* ---------- Consultas (o "PROCV" do sistema) ---------- */
+  const getCat = (id) => state.categorias.find((c) => c.id === id);
+  const getSub = (cat, id) => (cat ? cat.subs.find((s) => s.id === id) : undefined);
+  function classif(l) {
+    const c = getCat(l.categoriaId);
+    const s = getSub(c, l.subcategoriaId);
+    return { cat: c ? c.nome : 'Sem categoria', sub: s ? s.nome : (c ? c.nome : 'Sem categoria') };
+  }
+  const ofMonth = (key) => state.lancamentos.filter((l) => monthOf(l.data) === key);
+  function totals(list) {
+    let e = 0, s = 0;
+    for (const l of list) { if (l.tipo === 'entrada') e += l.valor; else s += l.valor; }
+    return { e, s, r: e - s, margem: e > 0 ? (e - s) / e : null };
+  }
+  const situacao = (r) => (r > 0 ? 'Lucro' : r < 0 ? 'Prejuízo' : 'Empate');
+  function bySub(list, tipo) {
+    const map = new Map();
+    list.filter((l) => l.tipo === tipo).forEach((l) => {
+      const k = l.subcategoriaId || l.categoriaId;
+      const c = classif(l);
+      const cur = map.get(k) || { nome: c.sub, cat: c.cat, tipo, valor: 0, qtd: 0 };
+      cur.valor += l.valor;
+      cur.qtd += 1;
+      map.set(k, cur);
+    });
+    return [...map.values()].sort((a, b) => b.valor - a.valor);
+  }
+  function monthOptions(extra = []) {
+    const set = new Set(state.lancamentos.map((l) => monthOf(l.data)));
+    set.add(CUR);
+    extra.forEach((k) => k && /^\d{4}-\d{2}$/.test(k) && set.add(k));
+    return [...set].sort().reverse();
+  }
+  const sortLanc = (a, b) => b.data.localeCompare(a.data) || (b.criadoEm || 0) - (a.criadoEm || 0);
+
+  /* ---------- Ícones ---------- */
+  const ICONS = {
+    home: '<path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>',
+    list: '<path d="M9 6h11M9 12h11M9 18h11"/><path d="M4.5 6h.01M4.5 12h.01M4.5 18h.01" stroke-width="3"/>',
+    folder: '<path d="M3 7.5A2.5 2.5 0 0 1 5.5 5H9l2 2.5h7.5A2.5 2.5 0 0 1 21 10v7.5a2.5 2.5 0 0 1-2.5 2.5h-13A2.5 2.5 0 0 1 3 17.5z"/>',
+    chart: '<path d="M3 3v18h18"/><path d="M7.5 16v-3M12 16V9M16.5 16V6"/>',
+    bulb: '<path d="M9 18h6M10 21.5h4"/><path d="M12 2.5a6.5 6.5 0 0 0-4.2 11.4c.8.7 1.2 1.6 1.2 2.6V17h6v-.5c0-1 .4-1.9 1.2-2.6A6.5 6.5 0 0 0 12 2.5z"/>',
+    gear: '<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>',
+    plus: '<path d="M12 5v14M5 12h14"/>',
+    up: '<path d="M7 17 17 7M8 7h9v9"/>',
+    down: '<path d="M7 7l10 10M17 8v9H8"/>',
+    wallet: '<path d="M19 7V5.5A1.5 1.5 0 0 0 17.5 4h-12A2.5 2.5 0 0 0 3 6.5v11A2.5 2.5 0 0 0 5.5 20h14a1.5 1.5 0 0 0 1.5-1.5V15"/><path d="M21 9h-5a3 3 0 0 0 0 6h5z"/><path d="M16 12h.01" stroke-width="3"/>',
+    percent: '<path d="M19 5 5 19"/><circle cx="7" cy="7" r="2.5"/><circle cx="17" cy="17" r="2.5"/>',
+    edit: '<path d="M4 20h4L19 9a2.83 2.83 0 0 0-4-4L4 16z"/><path d="m13.5 6.5 4 4"/>',
+    trash: '<path d="M4 7h16M10 11v6M14 11v6M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12M9 7V4h6v3"/>',
+    x: '<path d="M6 6l12 12M18 6 6 18"/>',
+    calendar: '<rect x="3" y="4.5" width="18" height="16.5" rx="2.5"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/>',
+    search: '<circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>',
+    menu: '<path d="M4 7h16M4 12h16M4 17h16"/>',
+    check: '<path d="M5 12.5l4.5 4.5L19 7.5"/>',
+    alert: '<path d="M12 8v5M12 16.5h.01"/><circle cx="12" cy="12" r="9"/>',
+    logout: '<path d="M9 20H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h3"/><path d="M16 16l4-4-4-4M20 12H10"/>',
+  };
+  const icon = (name, cls = '') =>
+    `<svg class="ic ${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[name] || ''}</svg>`;
+  function hydrateIcons(root = document) {
+    $$('i[data-icon]', root).forEach((el) => { el.outerHTML = icon(el.dataset.icon, el.className); });
+  }
+
+  /* ---------- Gráfico de barras (SVG próprio, sem bibliotecas) ---------- */
+  function niceStep(raw) {
+    if (!(raw > 0)) return 100000;
+    const exp = Math.pow(10, Math.floor(Math.log10(raw)));
+    const f = raw / exp;
+    const n = [1, 1.5, 2, 2.5, 3, 4, 5, 6, 8, 10].find((x) => f <= x) || 10;
+    return n * exp;
+  }
+
+  function renderBars(host, buckets, opts = {}) {
+    const W = Math.max(280, Math.round(host.clientWidth || 560));
+    const H = opts.height || 250;
+    const padL = 46, padR = 6, padT = 14, padB = 30;
+    const plotW = W - padL - padR, plotH = H - padT - padB;
+    const ticks = 4;
+    const maxV = Math.max(0, ...buckets.flatMap((b) => [b.e, b.s]));
+    const step = niceStep(maxV / ticks);
+    const top = step * ticks;
+    const gw = plotW / buckets.length;
+    const bw = Math.max(5, Math.min(18, gw * 0.24));
+    const gap = Math.max(2, Math.min(6, gw * 0.06));
+    let g = '';
+
+    for (let i = 0; i <= ticks; i++) {
+      const v = step * i;
+      const yy = padT + plotH - (v / top) * plotH;
+      g += `<line class="gridline" x1="${padL}" x2="${W - padR}" y1="${yy}" y2="${yy}"/>`;
+      g += `<text x="${padL - 8}" y="${yy + 4}" text-anchor="end">${i === 0 ? '0' : esc(compact(v))}</text>`;
+    }
+
+    const tips = [];
+    buckets.forEach((b, i) => {
+      const gx = padL + gw * i;
+      const cx = gx + gw / 2;
+      const he = (b.e / top) * plotH;
+      const hs = (b.s / top) * plotH;
+      const rx = Math.min(2.5, bw / 2);
+      if (b.sel) g += `<rect class="sel-bg" x="${gx + 2}" y="${padT - 8}" width="${gw - 4}" height="${H - 6 - (padT - 8)}" rx="6"/>`;
+      g += `<rect class="bar in" x="${cx - gap / 2 - bw}" y="${padT + plotH - he}" width="${bw}" height="${he}" rx="${rx}" style="animation-delay:${i * 45}ms"/>`;
+      g += `<rect class="bar out" x="${cx + gap / 2}" y="${padT + plotH - hs}" width="${bw}" height="${hs}" rx="${rx}" style="animation-delay:${i * 45 + 25}ms"/>`;
+      g += `<text class="xlab${b.sel ? ' on' : ''}" x="${cx}" y="${H - 9}" text-anchor="middle">${esc(b.label)}</text>`;
+      g += `<rect class="hit" data-tip-idx="${i}" x="${gx}" y="${padT}" width="${gw}" height="${plotH}"/>`;
+      tips.push(
+        `<strong>${esc(b.title || b.label)}</strong>` +
+        `<span class="t-in">Entradas: ${money(b.e)}</span>` +
+        `<span class="t-out">Saídas: ${money(b.s)}</span>` +
+        `<span>Resultado: ${money(b.e - b.s)}</span>`
+      );
+    });
+
+    host._tips = tips;
+    host._keys = buckets.map((b) => b.key);
+    host.innerHTML =
+      `<svg class="svg-chart${opts.animate === false ? ' noanim' : ''}" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="${esc(opts.label || 'Gráfico de entradas e saídas')}">${g}</svg>`;
+  }
+
+  /* ---------- Principais despesas: barra empilhada + lista ---------- */
+  function renderBreakdown(host, items, total, opts = {}) {
+    if (!total) {
+      host._tips = [];
+      host.innerHTML = '<p class="empty-line">Nenhuma saída registrada neste mês.</p>';
+      return;
+    }
+    host._tips = items.map((it) => `<strong>${esc(it.nome)}</strong><span>${money(it.valor)} · ${pct(it.valor / total)} das saídas</span>`);
+    host.innerHTML = `
+      <div class="stack-bar${opts.animate === false ? ' noanim' : ''}" role="img" aria-label="Divisão das saídas por subcategoria">
+        ${items.map((it, i) => `<span data-tip-idx="${i}" style="flex:${it.valor} 1 0;background:${it.cor}"></span>`).join('')}
+      </div>
+      <ul class="breakdown">
+        ${items.map((it) => `<li><span class="sw" style="background:${it.cor}"></span><span class="n">${esc(it.nome)}</span><span class="v">${money(it.valor)}</span><span class="p">${pct(it.valor / total)}</span></li>`).join('')}
+      </ul>`;
+  }
+
+  function donutItems(list) {
+    const rows = bySub(list, 'saida');
+    const mostrar = rows.length <= 6 ? rows : rows.slice(0, 5);
+    const items = mostrar.map((r, i) => ({ nome: r.nome, valor: r.valor, cor: PALETTE[i] || COR_OUTROS }));
+    const resto = rows.slice(mostrar.length);
+    if (resto.length) {
+      items.push({ nome: `Demais (${resto.map((r) => r.nome).join(', ')})`, valor: resto.reduce((a, r) => a + r.valor, 0), cor: COR_OUTROS });
+    }
+    return items;
+  }
+
+  /* ---------- Ranking em barras horizontais ---------- */
+  function renderRank(host, rows, total, tipo, animate) {
+    if (!rows.length) {
+      host.innerHTML = `<div class="empty-mini">${icon('chart')}<p>Nada registrado com esses filtros.</p></div>`;
+      return;
+    }
+    const max = rows[0].valor || 1;
+    host.classList.toggle('noanim', animate === false);
+    host.innerHTML = rows.map((r, i) => `
+      <div class="rank-row">
+        <div class="rank-top"><span>${esc(r.nome)}<small>${esc(r.cat)}</small></span><span class="v">${money(r.valor)}<em>${pct(r.valor / total)}</em></span></div>
+        <div class="rank-track"><div class="rank-fill ${tipo}" style="width:${((r.valor / max) * 100).toFixed(1)}%;animation-delay:${i * 60}ms"></div></div>
+      </div>`).join('');
+  }
+
+  /* ---------- Contador animado nos cards ---------- */
+  function setMoney(el, cents, animate = true) {
+    const prev = el.dataset.v === undefined ? null : Number(el.dataset.v);
+    el.dataset.v = String(cents);
+    const card = el.closest('.stat');
+    if (prev !== null && prev !== cents && card && animate) {
+      card.classList.remove('changed');
+      void card.offsetWidth;
+      card.classList.add('changed');
+    }
+    const from = prev === null ? 0 : prev;
+    if (!animate || from === cents || reduceMotion()) { el.textContent = money(cents); return; }
+    cancelAnimationFrame(el._raf);
+    const t0 = performance.now(), dur = 750;
+    const step = (now) => {
+      const k = Math.min(1, (now - t0) / dur);
+      const ease = 1 - Math.pow(1 - k, 3);
+      el.textContent = money(Math.round(from + (cents - from) * ease));
+      if (k < 1) el._raf = requestAnimationFrame(step);
+    };
+    el._raf = requestAnimationFrame(step);
+  }
+
+  /* ---------- Insights automáticos ---------- */
+  function buildInsights(key) {
+    const list = ofMonth(key);
+    const t = totals(list);
+    const p = totals(ofMonth(addMonths(key, -1)));
+    const quando = key === CUR ? 'este mês' : `em ${monthLabel(key)}`;
+    if (!list.length) {
+      return [{ tone: 'info', text: `Ainda não há lançamentos ${key === CUR ? 'neste mês' : 'em ' + monthLabel(key)}. Registre o primeiro para ver o resumo do seu negócio.` }];
+    }
+    const out = [];
+    if (t.e > 0) {
+      const r = t.s / t.e;
+      out.push({ tone: r > 1 ? 'bad' : r > 0.8 ? 'warn' : 'good', text: `Suas despesas representam <b>${pct(r)}</b> das suas entradas ${quando}.` });
+    } else {
+      out.push({ tone: 'bad', text: `Nenhuma entrada registrada ${quando}, apenas saídas.` });
+    }
+    if (t.e > t.s) out.push({ tone: 'good', text: `Suas entradas foram maiores que suas saídas ${quando}: sobraram <b>${money(t.r)}</b>.` });
+    else if (t.s > t.e) out.push({ tone: 'bad', text: `Suas saídas superaram as entradas em <b>${money(-t.r)}</b> ${quando}.` });
+    else out.push({ tone: 'warn', text: `Entradas e saídas empataram ${quando}: o negócio não teve lucro nem prejuízo.` });
+    if (p.s > 0 && t.s !== p.s) {
+      const d = (t.s - p.s) / p.s;
+      out.push({ tone: d > 0 ? 'warn' : 'good', text: `Suas despesas ${d > 0 ? 'aumentaram' : 'diminuíram'} <b>${pct(Math.abs(d))}</b> em relação ao mês anterior.` });
+    }
+    if (p.e > 0 && t.e !== p.e) {
+      const d = (t.e - p.e) / p.e;
+      out.push({ tone: d > 0 ? 'good' : 'warn', text: `Suas entradas ${d > 0 ? 'cresceram' : 'caíram'} <b>${pct(Math.abs(d))}</b> em relação ao mês anterior.` });
+    }
+    const topGasto = bySub(list, 'saida')[0];
+    if (topGasto && t.s > 0) out.push({ tone: 'info', text: `<b>${esc(topGasto.nome)}</b> é o seu maior gasto: ${pct(topGasto.valor / t.s)} das saídas.` });
+    return out;
+  }
+  const insightItems = (arr) => arr.map((i) => `<li><span class="dot ${i.tone}"></span><span>${i.text}</span></li>`).join('');
+
+  /* =========================================================
+     TELAS
+     ========================================================= */
+  function fillMonthSelect(sel, keys, selected, allLabel) {
+    sel.innerHTML = (allLabel ? `<option value="todos">${allLabel}</option>` : '') +
+      keys.map((k) => `<option value="${k}">${monthLabel(k)}</option>`).join('');
+    sel.value = selected;
+  }
+  const segOn = (sel, v) => $$(`${sel} button`).forEach((b) => b.classList.toggle('on', b.dataset.v === v));
+
+  function renderShell() {
+    const s = state.settings;
+    const ini = (s.usuario || s.negocio || 'M').trim().charAt(0).toUpperCase() || 'M';
+    $$('[data-avatar]').forEach((el) => { el.textContent = ini; });
+    $$('[data-user]').forEach((el) => { el.textContent = s.usuario || 'Usuário'; });
+    $$('[data-biz]').forEach((el) => { el.textContent = s.negocio || 'Meu negócio'; });
+    document.title = s.negocio ? `OrganizaMEI · ${s.negocio}` : 'OrganizaMEI';
+  }
+
+  function deltaPct(cur, prev, goodWhenUp, prevNome) {
+    if (!prev) return `Sem dados de ${prevNome}`;
+    const d = (cur - prev) / prev;
+    if (Math.abs(d) < 0.005) return `Igual a ${prevNome}`;
+    const up = d > 0;
+    return `<span class="${up === goodWhenUp ? 'good' : 'bad'}">${up ? '↑' : '↓'} ${pct(Math.abs(d))}</span> em relação a ${prevNome}`;
+  }
+
+  /* ---------- Início ---------- */
+  function renderDashboard(animate = true) {
+    const key = ui.dashMonth;
+    const list = ofMonth(key);
+    const t = totals(list);
+    const prevList = ofMonth(addMonths(key, -1));
+    const p = totals(prevList);
+
+    const primeiroNome = (state.settings.usuario || '').trim().split(/\s+/)[0] || 'empreendedor(a)';
+    const contaNova = state.lancamentos.length === 0;
+    $('#helloName').textContent = primeiroNome;
+    $('#helloSub').textContent = key === CUR
+      ? 'Este é o resumo do seu negócio neste mês.'
+      : `Este é o resumo do seu negócio em ${monthLabel(key)}.`;
+    fillMonthSelect($('#dashMonth'), monthOptions([key]), key);
+
+    // A frase que explica o mês em linguagem simples
+    const mesNome = MESES[Number(key.slice(5, 7)) - 1];
+    const prevNome = MESES[Number(addMonths(key, -1).slice(5, 7)) - 1].toLowerCase();
+    const atual = key === CUR;
+    let linha, sub;
+    if (contaNova) {
+      linha = `Tudo pronto, ${primeiroNome}.`;
+      sub = 'Registre sua primeira entrada ou saída e o resumo do mês aparece aqui.';
+    } else if (!list.length) {
+      linha = `Nenhum lançamento em ${mesNome.toLowerCase()} ainda.`;
+      sub = 'Registre a primeira entrada ou saída para ver o resumo aqui.';
+    } else if (t.r < 0) {
+      linha = atual ? `${mesNome} está no vermelho até agora.` : `${mesNome} fechou no vermelho.`;
+      sub = `Saiu ${money(-t.r)} a mais do que entrou.`;
+    } else if (t.r > 0) {
+      linha = atual ? `${mesNome} está no azul até agora.` : `${mesNome} fechou no azul.`;
+      sub = `Sobraram ${money(t.r)} depois de pagar as contas.`;
+    } else {
+      linha = `${mesNome} ${atual ? 'está' : 'ficou'} empatado.`;
+      sub = 'Entrou exatamente o mesmo valor que saiu.';
+    }
+    $('#sumLine').textContent = linha;
+    $('#sumSub').textContent = sub;
+    $('#sumCta').hidden = !contaNova;
+
+    setMoney($('#kIn'), t.e, animate);
+    setMoney($('#kOut'), t.s, animate);
+    setMoney($('#kRes'), t.r, animate);
+    $('#kInDelta').innerHTML = deltaPct(t.e, p.e, true, prevNome);
+    $('#kOutDelta').innerHTML = deltaPct(t.s, p.s, false, prevNome);
+
+    const res = $('#kpiRes');
+    res.classList.toggle('neg', t.r < 0);
+    res.classList.toggle('zero', t.r === 0 && list.length > 0);
+    res.classList.toggle('vazio', !list.length);
+    $('#kStatus').textContent = list.length ? situacao(t.r) : '';
+    $('#kStatus').hidden = !list.length;
+    if (prevList.length) {
+      const diff = t.r - p.r;
+      $('#kResDelta').innerHTML = diff === 0
+        ? `Igual a ${prevNome}`
+        : `<span class="${diff > 0 ? 'good' : 'bad'}">${money(Math.abs(diff))} ${diff > 0 ? 'acima' : 'abaixo'}</span> de ${prevNome}`;
+    } else {
+      $('#kResDelta').textContent = `Sem dados de ${prevNome}`;
+    }
+    if (contaNova) ['#kInDelta', '#kOutDelta', '#kResDelta'].forEach((id) => { $(id).textContent = ''; });
+
+    renderDashCharts(animate);
+
+    const box = $('#dashInsight');
+    box.hidden = !state.settings.insights;
+    $('#dashBottom').classList.toggle('solo', !state.settings.insights);
+    if (state.settings.insights) $('#insightList').innerHTML = insightItems(buildInsights(key).slice(0, 3));
+
+    const recent = [...list].sort(sortLanc).slice(0, 5);
+    $('#recentList').innerHTML = recent.length
+      ? recent.map(miniRow).join('')
+      : '<li class="empty-line">Nenhum lançamento neste mês. Use “Novo lançamento” para começar.</li>';
+  }
+
+  function renderDashCharts(animate = true) {
+    const key = ui.dashMonth;
+    const buckets = [];
+    for (let i = 5; i >= 0; i--) {
+      const k = addMonths(key, -i);
+      const t = totals(ofMonth(k));
+      buckets.push({ key: k, label: monthShort(k), title: monthLabel(k), e: t.e, s: t.s, sel: k === key });
+    }
+    const graficoVazio = buckets.every((b) => !b.e && !b.s);
+    $('#dashBarsNote').hidden = graficoVazio;
+    if (graficoVazio) {
+      $('#dashBars')._tips = [];
+      $('#dashBars').innerHTML = '<p class="chart-empty">O gráfico aparece aqui assim que você registrar os primeiros lançamentos.</p>';
+    } else {
+      renderBars($('#dashBars'), buckets, { animate, label: 'Entradas e saídas dos últimos 6 meses' });
+    }
+    const list = ofMonth(key);
+    renderBreakdown($('#dashDonut'), donutItems(list), totals(list).s, { animate });
+  }
+
+  function miniRow(l) {
+    const c = classif(l);
+    const isIn = l.tipo === 'entrada';
+    const [, m, d] = l.data.split('-');
+    return `<li class="mini${l.id === ui.lastId ? ' flash' : ''}">
+      <span class="mini-date"><b>${d}</b>${MESES_ABREV[Number(m) - 1].toLowerCase()}</span>
+      <div class="mini-txt"><strong>${esc(l.descricao)}</strong><small>${esc(c.sub)}</small></div>
+      <span class="mini-val ${isIn ? 'val-in' : 'val-out'}">${isIn ? '+' : '−'} ${money(l.valor)}</span>
+    </li>`;
+  }
+
+  /* ---------- Lançamentos ---------- */
+  function renderLancamentos() {
+    fillMonthSelect($('#fMonth'), monthOptions([ui.lancMonth]), ui.lancMonth, 'Todos os meses');
+    segOn('#fType', ui.lancTipo);
+    if ($('#fSearch').value !== ui.lancBusca) $('#fSearch').value = ui.lancBusca;
+
+    const q = norm(ui.lancBusca.trim());
+    const rows = state.lancamentos.filter((l) => {
+      if (ui.lancMonth !== 'todos' && monthOf(l.data) !== ui.lancMonth) return false;
+      if (ui.lancTipo !== 'todos' && l.tipo !== ui.lancTipo) return false;
+      if (!q) return true;
+      const c = classif(l);
+      return norm(`${l.descricao} ${l.obs} ${c.cat} ${c.sub}`).includes(q);
+    }).sort(sortLanc);
+
+    const t = totals(rows);
+    $('#lancSummary').innerHTML =
+      `<span><strong>${rows.length}</strong> lançamento${rows.length === 1 ? '' : 's'}</span>` +
+      `<span>Entradas <strong class="val-in">${money(t.e)}</strong></span>` +
+      `<span>Saídas <strong class="val-out">${money(t.s)}</strong></span>` +
+      `<span>Saldo <strong class="${t.r < 0 ? 'val-out' : 'val-in'}">${money(t.r)}</strong></span>`;
+
+    $('#lancBody').innerHTML = rows.map(rowHTML).join('');
+    $('#lancEmpty').hidden = rows.length > 0;
+    $('#lancTableWrap').hidden = rows.length === 0;
+  }
+
+  function rowHTML(l) {
+    const c = classif(l);
+    const isIn = l.tipo === 'entrada';
+    return `<tr class="${l.id === ui.lastId ? 'flash' : ''}">
+      <td class="td-date">${fmtDate(l.data)}</td>
+      <td class="td-desc"><strong>${esc(l.descricao)}</strong>${l.obs ? `<small class="obs">${esc(l.obs)}</small>` : ''}<small class="m-meta">${fmtDate(l.data)} · ${esc(c.cat)} › ${esc(c.sub)}</small></td>
+      <td class="td-cat">${esc(c.cat)}<small>${esc(c.sub)}</small></td>
+      <td class="td-type"><span class="badge ${isIn ? 'in' : 'out'}">${isIn ? 'Entrada' : 'Saída'}</span></td>
+      <td class="td-val num ${isIn ? 'val-in' : 'val-out'}">${isIn ? '+' : '−'} ${money(l.valor)}</td>
+      <td class="td-acts"><div class="row-actions">
+        <button class="icon-btn sm" type="button" data-edit="${l.id}" aria-label="Editar ${esc(l.descricao)}">${icon('edit')}</button>
+        <button class="icon-btn sm danger" type="button" data-del="${l.id}" aria-label="Excluir ${esc(l.descricao)}">${icon('trash')}</button>
+      </div></td>
+    </tr>`;
+  }
+
+  /* ---------- Categorias ---------- */
+  function renderCategorias() {
+    const usage = {};
+    state.lancamentos.forEach((l) => {
+      usage[l.categoriaId] = (usage[l.categoriaId] || 0) + 1;
+      usage[`s:${l.subcategoriaId}`] = (usage[`s:${l.subcategoriaId}`] || 0) + 1;
+    });
+    [['entrada', '#catIn'], ['saida', '#catOut']].forEach(([tipo, sel]) => {
+      const cats = state.categorias.filter((c) => c.tipo === tipo);
+      $(sel).innerHTML = cats.length
+        ? cats.map((c) => catCard(c, usage)).join('')
+        : `<div class="card empty-mini">${icon('folder')}<p>Nenhuma categoria de ${tipo === 'entrada' ? 'entrada' : 'saída'} ainda.</p></div>`;
+    });
+  }
+
+  function catCard(c, usage) {
+    const n = usage[c.id] || 0;
+    const chips = c.subs.map((s) => `
+      <span class="chip">${esc(s.nome)}<span class="count" title="Lançamentos">${usage[`s:${s.id}`] || 0}</span>
+        <button type="button" data-delsub="${c.id}|${s.id}" aria-label="Remover ${esc(s.nome)}">${icon('x')}</button>
+      </span>`).join('');
+    return `<article class="card cat-card">
+      <header class="cat-head">
+        <span class="dot ${c.tipo === 'entrada' ? 'in' : 'out'}"></span>
+        <h3>${esc(c.nome)}</h3>
+        <span class="cat-meta">${n} lançamento${n === 1 ? '' : 's'}</span>
+        <button class="icon-btn sm danger" type="button" data-delcat="${c.id}" aria-label="Excluir categoria ${esc(c.nome)}">${icon('trash')}</button>
+      </header>
+      <div class="chips">${chips || '<span class="muted sm">Sem subcategorias</span>'}</div>
+      <div class="add-sub">
+        <input class="input" placeholder="Nova subcategoria" maxlength="40" data-subinput="${c.id}" aria-label="Nova subcategoria em ${esc(c.nome)}">
+        <button class="btn btn-ghost sm" type="button" data-addsub="${c.id}">${icon('plus')}Adicionar</button>
+      </div>
+    </article>`;
+  }
+
+  /* ---------- Relatórios ---------- */
+  const PRESETS = [
+    ['mes-atual', 'Este mês'],
+    ['mes-anterior', 'Mês anterior'],
+    ['ult-3', 'Últimos 3 meses'],
+    ['ult-6', 'Últimos 6 meses'],
+    ['ano', 'Este ano'],
+    ['tudo', 'Todo o período'],
+    ['custom', 'Personalizado…'],
+  ];
+
+  function repRange() {
+    const p = ui.rep.periodo;
+    const mStart = (k) => `${k}-01`;
+    const mEnd = (k) => `${k}-${pad(daysIn(k))}`;
+    if (p.startsWith('m:')) { const k = p.slice(2); return { start: mStart(k), end: mEnd(k), label: monthLabel(k) }; }
+    switch (p) {
+      case 'mes-atual': return { start: mStart(CUR), end: mEnd(CUR), label: monthLabel(CUR) };
+      case 'mes-anterior': { const k = addMonths(CUR, -1); return { start: mStart(k), end: mEnd(k), label: monthLabel(k) }; }
+      case 'ult-3': return { start: mStart(addMonths(CUR, -2)), end: mEnd(CUR), label: 'Últimos 3 meses' };
+      case 'ult-6': return { start: mStart(addMonths(CUR, -5)), end: mEnd(CUR), label: 'Últimos 6 meses' };
+      case 'ano': return { start: `${CUR.slice(0, 4)}-01-01`, end: `${CUR.slice(0, 4)}-12-31`, label: `Ano de ${CUR.slice(0, 4)}` };
+      case 'custom': {
+        let a = ui.rep.de || mStart(CUR);
+        let b = ui.rep.ate || mEnd(CUR);
+        if (a > b) [a, b] = [b, a];
+        return { start: a, end: b, label: `De ${fmtDate(a)} a ${fmtDate(b)}` };
+      }
+      default: {
+        const ds = state.lancamentos.map((l) => l.data).sort();
+        return { start: ds[0] || mStart(CUR), end: ds[ds.length - 1] || mEnd(CUR), label: 'Todo o período' };
+      }
+    }
+  }
+
+  function repBuckets(range) {
+    const ks = monthOf(range.start), ke = monthOf(range.end);
+    const out = [];
+    if (ks === ke) {
+      const dim = daysIn(ks);
+      for (let w = 0; w * 7 < dim; w++) {
+        const d1 = w * 7 + 1, d2 = Math.min(dim, d1 + 6);
+        out.push({ label: `Sem ${w + 1}`, title: `${pad(d1)} a ${pad(d2)}/${ks.slice(5)}`, start: `${ks}-${pad(d1)}`, end: `${ks}-${pad(d2)}` });
+      }
+      return { buckets: out, title: `Semana a semana em ${monthLabel(ks)}` };
+    }
+    const multiYear = ks.slice(0, 4) !== ke.slice(0, 4);
+    let k = ks, guard = 0;
+    while (k <= ke && guard++ < 60) {
+      out.push({ label: monthShort(k) + (multiYear ? `/${k.slice(2, 4)}` : ''), title: monthLabel(k), start: `${k}-01`, end: `${k}-${pad(daysIn(k))}` });
+      k = addMonths(k, 1);
+    }
+    return { buckets: out, title: 'Evolução mês a mês' };
+  }
+
+  function renderRelatorios(animate = true) {
+    // Filtros
+    const selP = $('#rPeriodo');
+    selP.innerHTML =
+      `<optgroup label="Períodos">${PRESETS.map(([v, l]) => `<option value="${v}">${l}</option>`).join('')}</optgroup>` +
+      `<optgroup label="Meses">${monthOptions().map((k) => `<option value="m:${k}">${monthLabel(k)}</option>`).join('')}</optgroup>`;
+    selP.value = ui.rep.periodo;
+    if (selP.value !== ui.rep.periodo) { ui.rep.periodo = 'ult-6'; selP.value = 'ult-6'; }
+    $$('[data-custom]').forEach((el) => { el.hidden = ui.rep.periodo !== 'custom'; });
+
+    if (ui.rep.cat !== 'todas' && !getCat(ui.rep.cat)) ui.rep.cat = 'todas';
+    $('#rCat').innerHTML = '<option value="todas">Todas as categorias</option>' +
+      ['entrada', 'saida'].map((t) => {
+        const cs = state.categorias.filter((c) => c.tipo === t);
+        return cs.length ? `<optgroup label="${t === 'entrada' ? 'Entradas' : 'Saídas'}">${cs.map((c) => `<option value="${c.id}">${esc(c.nome)}</option>`).join('')}</optgroup>` : '';
+      }).join('');
+    $('#rCat').value = ui.rep.cat;
+    segOn('#rTipo', ui.rep.tipo);
+
+    // Dados filtrados
+    const range = repRange();
+    if (ui.rep.periodo === 'custom') { $('#rDe').value = range.start; $('#rAte').value = range.end; }
+    const list = state.lancamentos.filter((l) =>
+      l.data >= range.start && l.data <= range.end &&
+      (ui.rep.cat === 'todas' || l.categoriaId === ui.rep.cat) &&
+      (ui.rep.tipo === 'todos' || l.tipo === ui.rep.tipo));
+    const t = totals(list);
+    $('#rRangeLabel').textContent = `${range.label}: ${list.length} lançamento${list.length === 1 ? '' : 's'}`;
+
+    setMoney($('#rIn'), t.e, animate);
+    setMoney($('#rOut'), t.s, animate);
+    setMoney($('#rRes'), t.r, animate);
+    $('#rResCard').classList.toggle('neg', t.r < 0);
+    $('#rResCard').classList.toggle('zero', t.r === 0 && list.length > 0);
+    $('#rResCard').classList.toggle('vazio', !list.length);
+    $('#rStatus').textContent = list.length ? situacao(t.r) : '';
+    $('#rStatus').hidden = !list.length;
+    $('#rMargem').textContent = t.margem === null ? '—' : pct(t.margem);
+
+    // Evolução
+    const { buckets, title } = repBuckets(range);
+    const filled = buckets.map((b) => {
+      const tt = totals(list.filter((l) => l.data >= b.start && l.data <= b.end));
+      return { ...b, e: tt.e, s: tt.s };
+    });
+    $('#rBarsTitle').textContent = title;
+    if (filled.every((b) => !b.e && !b.s)) {
+      $('#rBars')._tips = [];
+      $('#rBars').innerHTML = '<p class="chart-empty">Nenhum lançamento nesse período ainda.</p>';
+    } else {
+      renderBars($('#rBars'), filled, { animate, height: 260, label: title });
+    }
+
+    // Rankings
+    const outRows = bySub(list, 'saida');
+    const inRows = bySub(list, 'entrada');
+    $('#rRankOutCard').hidden = ui.rep.tipo === 'entrada';
+    $('#rRankInCard').hidden = ui.rep.tipo === 'saida';
+    renderRank($('#rRankOut'), outRows, t.s || 1, 'saida', animate);
+    renderRank($('#rRankIn'), inRows, t.e || 1, 'entrada', animate);
+
+    // Tabela-resumo
+    const all = [...inRows, ...outRows].sort((a, b) => b.valor - a.valor);
+    $('#rTable').innerHTML = all.length
+      ? all.map((r) => {
+          const isIn = r.tipo === 'entrada';
+          return `<tr><td>${esc(r.nome)}</td><td>${esc(r.cat)}</td>
+            <td><span class="badge ${isIn ? 'in' : 'out'}">${isIn ? 'Entrada' : 'Saída'}</span></td>
+            <td class="num">${r.qtd}</td>
+            <td class="num ${isIn ? 'val-in' : 'val-out'}">${money(r.valor)}</td>
+            <td class="num">${pct(r.valor / ((isIn ? t.e : t.s) || 1))}</td></tr>`;
+        }).join('')
+      : '<tr><td colspan="6" class="muted">Nenhum lançamento com esses filtros.</td></tr>';
+  }
+
+  /* ---------- Dicas ---------- */
+  const DICAS = [
+    ['🏦', 'Separe o pessoal do profissional', 'Tenha uma conta só para o negócio. Misturar o dinheiro de casa com o da empresa esconde o seu lucro real.'],
+    ['📅', 'Acompanhe as despesas todo mês', 'Reserve um horário fixo na semana para lançar tudo. Gastos pequenos somados viram um buraco grande.'],
+    ['📈', 'Conheça seu lucro antes de gastar mais', 'Antes de contratar, investir ou aumentar o estoque, confira se o resultado dos últimos meses sustenta esse passo.'],
+    ['💸', 'Defina sua retirada mensal', 'Combine um valor fixo para você tirar do negócio todo mês, em vez de usar o caixa sempre que precisar.'],
+    ['🧾', 'Pague o DAS em dia', 'A guia mensal do MEI vence no dia 20. Pagar em dia evita multa e mantém seus direitos no INSS.'],
+    ['🛟', 'Monte uma reserva para o negócio', 'Guardar uma parte das entradas todo mês ajuda a passar pelos meses fracos sem se endividar.'],
+    ['🎯', 'Fique de olho no limite do MEI', 'O teto do MEI é de R$ 81 mil por ano, cerca de R$ 6.750 por mês. Acompanhe suas entradas acumuladas para não ter surpresa.'],
+    ['🤝', 'Negocie com fornecedores', 'Fornecedores costumam ser o maior gasto. Comparar preços e negociar prazos melhora sua margem.'],
+    ['🗂️', 'Registre tudo, até o cafezinho', 'Quanto mais completos os lançamentos, mais confiáveis ficam os relatórios e os insights.'],
+  ];
+
+  function renderDicas() {
+    $('#dInsTitle').textContent = `Insights de ${monthLabel(ui.dashMonth)}`;
+    $('#dInsList').innerHTML = insightItems(buildInsights(ui.dashMonth));
+    $('#tipsGrid').innerHTML = DICAS.map(([, t, p]) => `<article class="tip"><h3>${t}</h3><p>${p}</p></article>`).join('');
+  }
+
+  /* ---------- Configurações ---------- */
+  function renderConfig() {
+    const s = state.settings;
+    $('#sNegocio').value = s.negocio || '';
+    $('#sUsuario').value = s.usuario || '';
+    $('#sEmail').value = s.email || '';
+    $('#sMoeda').value = s.moeda || 'BRL';
+    segOn('#sTema', s.tema);
+    $('#sInsights').checked = !!s.insights;
+  }
+  function applyTheme() {
+    document.documentElement.setAttribute('data-theme', state.settings.tema === 'claro' ? 'light' : 'dark');
+  }
+
+  /* =========================================================
+     NAVEGAÇÃO
+     ========================================================= */
+  const ROUTES = ['inicio', 'lancamentos', 'categorias', 'relatorios', 'dicas', 'configuracoes'];
+  const RENDER = {
+    inicio: renderDashboard,
+    lancamentos: renderLancamentos,
+    categorias: renderCategorias,
+    relatorios: renderRelatorios,
+    dicas: renderDicas,
+    configuracoes: renderConfig,
+  };
+
+  function showRoute(name) {
+    if (!ROUTES.includes(name)) name = 'inicio';
+    ui.route = name;
+    closeAllModals();
+    hideTip();
+    $$('.view').forEach((v) => { v.hidden = v.dataset.view !== name; });
+    $$('[data-route]').forEach((a) => a.classList.toggle('active', a.dataset.route === name));
+    $('#bnMore').classList.toggle('active', ['categorias', 'dicas', 'configuracoes'].includes(name));
+    renderShell();
+    RENDER[name](true);
+    window.scrollTo(0, 0);
+  }
+  function go(name) {
+    try { if (location.hash !== `#${name}`) location.hash = name; } catch (e) { /* ambiente sem hash */ }
+    showRoute(name);
+  }
+  function rerender(animate = true) {
+    renderShell();
+    RENDER[ui.route](animate);
+  }
+
+  /* =========================================================
+     MODAIS, AVISOS E TOOLTIP
+     ========================================================= */
+  let lastFocus = null;
+  let confirmResolve = null;
+
+  function openModal(id) {
+    const m = $(`#${id}`);
+    lastFocus = document.activeElement;
+    m.hidden = false;
+    document.body.classList.add('no-scroll');
+    if (finePointer()) {
+      setTimeout(() => {
+        const f = m.querySelector('[data-autofocus]') || m.querySelector('input, select, textarea, .modal-foot .btn-primary, .modal-foot .btn-danger');
+        if (f) f.focus();
+      }, 60);
+    }
+  }
+  function closeModal(id) {
+    const m = $(`#${id}`);
+    if (!m || m.hidden) return;
+    m.hidden = true;
+    if (id === 'modalConfirm' && confirmResolve) { confirmResolve(false); confirmResolve = null; }
+    if (!$$('.modal').some((x) => !x.hidden)) document.body.classList.remove('no-scroll');
+    if (lastFocus && document.contains(lastFocus) && lastFocus.focus) lastFocus.focus({ preventScroll: true });
+  }
+  function closeAllModals() { $$('.modal').forEach((m) => { if (!m.hidden) closeModal(m.id); }); }
+
+  function confirmar({ titulo, texto, ok = 'Confirmar', perigo = true }) {
+    $('#cTitle').textContent = titulo;
+    $('#cText').textContent = texto;
+    const b = $('#cOk');
+    b.textContent = ok;
+    b.className = `btn ${perigo ? 'btn-danger' : 'btn-primary'}`;
+    openModal('modalConfirm');
+    return new Promise((res) => { confirmResolve = res; });
+  }
+
+  function toast(msg, tone = 'good') {
+    const el = document.createElement('div');
+    el.className = `toast ${tone}`;
+    el.innerHTML = `${icon(tone === 'good' ? 'check' : 'alert')}<span>${esc(msg)}</span>`;
+    $('#toasts').appendChild(el);
+    setTimeout(() => { el.classList.add('out'); setTimeout(() => el.remove(), 320); }, 3400);
+  }
+
+  const tip = () => $('#tooltip');
+  let tipTimer = null;
+  let lastPointer = 'mouse';
+  function showTip(target, x, y) {
+    const host = target.closest('.chart-host');
+    const html = host && host._tips ? host._tips[Number(target.dataset.tipIdx)] : null;
+    if (!html) { hideTip(); return; }
+    const t = tip();
+    t.innerHTML = html;
+    t.classList.add('show');
+    const w = t.offsetWidth, h = t.offsetHeight;
+    t.style.left = `${Math.min(window.innerWidth - 10 - w / 2, Math.max(10 + w / 2, x))}px`;
+    t.style.top = `${y}px`;
+    t.classList.toggle('below', y < h + 30);
+  }
+  function hideTip() { tip().classList.remove('show'); }
+
+  /* =========================================================
+     FORMULÁRIO DE LANÇAMENTO
+     ========================================================= */
+  function fillCatSelect() {
+    $('#lCat').innerHTML = ['entrada', 'saida'].map((t) => {
+      const cs = state.categorias.filter((c) => c.tipo === t);
+      return cs.length ? `<optgroup label="${t === 'entrada' ? 'Entradas' : 'Saídas'}">${cs.map((c) => `<option value="${c.id}">${esc(c.nome)}</option>`).join('')}</optgroup>` : '';
+    }).join('');
+  }
+  function setValor(cents) {
+    const el = $('#lValor');
+    el.dataset.cents = String(cents);
+    el.value = cents ? money(cents) : '';
+  }
+  function classifyText() {
+    const cat = getCat($('#lCat').value);
+    const sub = getSub(cat, $('#lSub').value);
+    $('#lClassify').innerHTML = cat
+      ? `${icon('check')}<span>Classificado automaticamente como <strong class="${cat.tipo === 'entrada' ? 'val-in' : 'val-out'}">${cat.tipo === 'entrada' ? 'Entrada' : 'Saída'}</strong> › ${esc(cat.nome)}${sub ? ` › ${esc(sub.nome)}` : ''}</span>`
+      : '';
+  }
+  // Ao escolher a categoria, o sistema descobre sozinho se é entrada ou saída
+  function syncFromCat(subId) {
+    const cat = getCat($('#lCat').value);
+    const sub = $('#lSub');
+    if (!cat) {
+      sub.innerHTML = '<option value="">—</option>';
+      classifyText();
+      return;
+    }
+    segOn('#lType', cat.tipo);
+    sub.innerHTML = cat.subs.length
+      ? cat.subs.map((s) => `<option value="${s.id}">${esc(s.nome)}</option>`).join('')
+      : '<option value="">Sem subcategoria</option>';
+    if (subId && cat.subs.some((s) => s.id === subId)) sub.value = subId;
+    classifyText();
+  }
+  function pickTipo(tipo) {
+    const cur = getCat($('#lCat').value);
+    if (cur && cur.tipo === tipo) return;
+    const c = state.categorias.find((x) => x.tipo === tipo);
+    if (!c) { toast(`Crie uma categoria de ${tipo === 'entrada' ? 'entrada' : 'saída'} primeiro.`, 'warn'); return; }
+    $('#lCat').value = c.id;
+    syncFromCat();
+  }
+
+  function openLanc(id) {
+    if (!state.categorias.length) { toast('Crie uma categoria antes de lançar.', 'warn'); go('categorias'); return; }
+    const l = id ? state.lancamentos.find((x) => x.id === id) : null;
+    ui.editingId = l ? l.id : null;
+    $('#lancTitle').textContent = l ? 'Editar lançamento' : 'Novo lançamento';
+    $('#lSave').textContent = l ? 'Salvar alterações' : 'Salvar lançamento';
+    $('#lData').value = l ? l.data : toISO(new Date());
+    $('#lDesc').value = l ? l.descricao : '';
+    $('#lObs').value = l ? (l.obs || '') : '';
+    setValor(l ? l.valor : 0);
+    fillCatSelect();
+    const tipo = l ? l.tipo : 'entrada';
+    const catId = l && getCat(l.categoriaId) ? l.categoriaId : (state.categorias.find((c) => c.tipo === tipo) || state.categorias[0]).id;
+    $('#lCat').value = catId;
+    syncFromCat(l ? l.subcategoriaId : null);
+    $('#lError').textContent = '';
+    openModal('modalLanc');
+  }
+
+  function saveLanc() {
+    const data = $('#lData').value;
+    const descricao = $('#lDesc').value.trim();
+    const cat = getCat($('#lCat').value);
+    const sub = getSub(cat, $('#lSub').value);
+    const valor = Number($('#lValor').dataset.cents || 0);
+    const obs = $('#lObs').value.trim();
+    const err = !data ? 'Informe a data do lançamento.'
+      : !descricao ? 'Escreva uma descrição, por exemplo “Venda de produto”.'
+      : !cat ? 'Escolha uma categoria.'
+      : valor <= 0 ? 'Informe um valor maior que zero.'
+      : '';
+    if (err) { $('#lError').textContent = err; return; }
+
+    const dados = { data, descricao, tipo: cat.tipo, categoriaId: cat.id, subcategoriaId: sub ? sub.id : '', valor, obs };
+    if (ui.editingId) {
+      const i = state.lancamentos.findIndex((x) => x.id === ui.editingId);
+      if (i >= 0) state.lancamentos[i] = { ...state.lancamentos[i], ...dados };
+      ui.lastId = ui.editingId;
+      toast('Lançamento atualizado. Os totais foram recalculados.');
+    } else {
+      const novo = { id: uid(), ...dados, criadoEm: Date.now() };
+      state.lancamentos.push(novo);
+      ui.lastId = novo.id;
+      toast(`${cat.tipo === 'entrada' ? 'Entrada' : 'Saída'} de ${money(valor)} registrada. O dashboard já foi atualizado.`);
+    }
+    // Mostra o mês do lançamento para a mudança ficar visível
+    ui.dashMonth = monthOf(data);
+    if (ui.lancMonth !== 'todos') ui.lancMonth = monthOf(data);
+    persist();
+    closeModal('modalLanc');
+    rerender(true);
+    const flashed = ui.lastId;
+    setTimeout(() => { if (ui.lastId === flashed) ui.lastId = null; }, 2500);
+  }
+
+  /* =========================================================
+     CATEGORIAS: criar / remover
+     ========================================================= */
+  function openNewCat() {
+    $('#ncNome').value = '';
+    $('#ncSubs').value = '';
+    $('#ncError').textContent = '';
+    ui.ncTipo = 'saida';
+    segOn('#ncTipo', ui.ncTipo);
+    openModal('modalCat');
+  }
+  function saveNewCat() {
+    const nome = $('#ncNome').value.trim();
+    if (!nome) { $('#ncError').textContent = 'Dê um nome para a categoria.'; return; }
+    if (state.categorias.some((c) => c.tipo === ui.ncTipo && norm(c.nome) === norm(nome))) {
+      $('#ncError').textContent = 'Já existe uma categoria com esse nome.';
+      return;
+    }
+    const nomes = [];
+    $('#ncSubs').value.split(',').map((s) => s.trim()).filter(Boolean).forEach((s) => {
+      if (!nomes.some((n) => norm(n) === norm(s))) nomes.push(s.slice(0, 40));
+    });
+    state.categorias.push({ id: `cat-${uid()}`, nome, tipo: ui.ncTipo, subs: nomes.map((n) => ({ id: `sub-${uid()}`, nome: n })) });
+    persist();
+    closeModal('modalCat');
+    rerender();
+    toast(`Categoria “${nome}” criada.`);
+  }
+  function addSub(cid) {
+    const c = getCat(cid);
+    const inp = $(`[data-subinput="${cid}"]`);
+    if (!c || !inp) return;
+    const nome = inp.value.trim();
+    if (!nome) { inp.focus(); return; }
+    if (c.subs.some((s) => norm(s.nome) === norm(nome))) { toast('Essa subcategoria já existe.', 'warn'); return; }
+    c.subs.push({ id: `sub-${uid()}`, nome });
+    persist();
+    renderCategorias();
+    toast(`Subcategoria “${nome}” adicionada em ${c.nome}.`);
+    const again = $(`[data-subinput="${cid}"]`);
+    if (again && finePointer()) again.focus();
+  }
+
+  /* =========================================================
+     EVENTOS
+     ========================================================= */
+  function bindEvents() {
+    window.addEventListener('hashchange', () => {
+      const name = location.hash.slice(1);
+      if (currentId && name && name !== ui.route) showRoute(name);
+    });
+
+    document.addEventListener('click', async (e) => {
+      const t = e.target.closest('a, button, [data-close], [data-tip-idx]');
+      if (!t) return;
+
+      if (t.dataset.route) { e.preventDefault(); go(t.dataset.route); return; }
+      if (t.hasAttribute('data-close')) { const m = t.closest('.modal'); if (m) closeModal(m.id); return; }
+
+      // Clique numa barra do dashboard muda o mês
+      if (t.dataset.tipIdx !== undefined && lastPointer === 'mouse') {
+        const host = t.closest('#dashBars');
+        const key = host && host._keys ? host._keys[Number(t.dataset.tipIdx)] : null;
+        if (key && key !== ui.dashMonth) { ui.dashMonth = key; renderDashboard(true); }
+        return;
+      }
+
+      const action = t.dataset.action;
+      if (action === 'new') { openLanc(); return; }
+      if (action === 'new-cat') { openNewCat(); return; }
+      if (action === 'more') { openModal('modalMore'); return; }
+      if (action === 'logout') { sair(); return; }
+      if (t.dataset.auth) { authAction(t.dataset.auth, t); return; }
+
+      if (t.dataset.edit) { openLanc(t.dataset.edit); return; }
+
+      if (t.dataset.del) {
+        const l = state.lancamentos.find((x) => x.id === t.dataset.del);
+        if (!l) return;
+        const ok = await confirmar({ titulo: 'Excluir lançamento?', texto: `“${l.descricao}” (${money(l.valor)}) será removido e os totais serão recalculados.`, ok: 'Excluir lançamento' });
+        if (!ok) return;
+        state.lancamentos = state.lancamentos.filter((x) => x.id !== l.id);
+        persist();
+        rerender(true);
+        toast('Lançamento excluído.', 'warn');
+        return;
+      }
+
+      if (t.dataset.delcat) {
+        const c = getCat(t.dataset.delcat);
+        if (!c) return;
+        const n = state.lancamentos.filter((l) => l.categoriaId === c.id).length;
+        if (n) { toast(`“${c.nome}” tem ${n} lançamento${n === 1 ? '' : 's'}. Edite ou exclua esses lançamentos antes.`, 'warn'); return; }
+        const ok = await confirmar({ titulo: 'Excluir categoria?', texto: `A categoria “${c.nome}” e as subcategorias dela serão removidas.`, ok: 'Excluir categoria' });
+        if (!ok) return;
+        state.categorias = state.categorias.filter((x) => x.id !== c.id);
+        persist();
+        rerender();
+        toast('Categoria excluída.', 'warn');
+        return;
+      }
+
+      if (t.dataset.delsub) {
+        const [cid, sid] = t.dataset.delsub.split('|');
+        const c = getCat(cid);
+        const s = getSub(c, sid);
+        if (!s) return;
+        const n = state.lancamentos.filter((l) => l.subcategoriaId === sid).length;
+        if (n) { toast(`“${s.nome}” tem ${n} lançamento${n === 1 ? '' : 's'}. Edite ou exclua esses lançamentos antes.`, 'warn'); return; }
+        c.subs = c.subs.filter((x) => x.id !== sid);
+        persist();
+        renderCategorias();
+        toast(`Subcategoria “${s.nome}” removida.`, 'warn');
+        return;
+      }
+
+      if (t.dataset.addsub) { addSub(t.dataset.addsub); return; }
+
+      // Botões segmentados
+      const seg = t.closest('.seg');
+      if (seg && t.dataset.v) {
+        const v = t.dataset.v;
+        if (seg.id === 'lType') pickTipo(v);
+        else if (seg.id === 'ncTipo') { ui.ncTipo = v; segOn('#ncTipo', v); }
+        else if (seg.id === 'fType') { ui.lancTipo = v; renderLancamentos(); }
+        else if (seg.id === 'rTipo') { ui.rep.tipo = v; renderRelatorios(true); }
+        else if (seg.id === 'sTema') { state.settings.tema = v; segOn('#sTema', v); applyTheme(); persist(); }
+      }
+    });
+
+    // Formulário de lançamento
+    $('#lCat').addEventListener('change', () => syncFromCat());
+    $('#lSub').addEventListener('change', classifyText);
+    $('#lValor').addEventListener('input', (e) => {
+      const digits = e.target.value.replace(/\D/g, '').replace(/^0+/, '').slice(0, 11);
+      setValor(Number(digits || 0));
+    });
+    $('#lSave').addEventListener('click', saveLanc);
+    $('#ncSave').addEventListener('click', saveNewCat);
+    $('#cOk').addEventListener('click', () => {
+      const r = confirmResolve;
+      confirmResolve = null;
+      closeModal('modalConfirm');
+      if (r) r(true);
+    });
+
+    // Filtros
+    $('#dashMonth').addEventListener('change', (e) => { ui.dashMonth = e.target.value; renderDashboard(true); });
+    $('#fMonth').addEventListener('change', (e) => { ui.lancMonth = e.target.value; renderLancamentos(); });
+    $('#fSearch').addEventListener('input', (e) => { ui.lancBusca = e.target.value; renderLancamentos(); });
+    $('#rPeriodo').addEventListener('change', (e) => { ui.rep.periodo = e.target.value; renderRelatorios(true); });
+    $('#rDe').addEventListener('change', (e) => { ui.rep.de = e.target.value; renderRelatorios(true); });
+    $('#rAte').addEventListener('change', (e) => { ui.rep.ate = e.target.value; renderRelatorios(true); });
+    $('#rCat').addEventListener('change', (e) => { ui.rep.cat = e.target.value; renderRelatorios(true); });
+
+    // Configurações
+    $('#sSave').addEventListener('click', () => {
+      const negocio = $('#sNegocio').value.trim();
+      const usuario = $('#sUsuario').value.trim();
+      const email = normEmail($('#sEmail').value);
+      if (!negocio || !usuario) { toast('Preencha o nome do negócio e o seu nome.', 'bad'); return; }
+      if (!emailValido(email)) { toast('Confira o e-mail: parece incompleto.', 'bad'); return; }
+      const contas = getContas();
+      if (contas.some((c) => c.email === email && c.id !== currentId)) { toast('Já existe outra conta com esse e-mail neste navegador.', 'bad'); return; }
+      const minha = contas.find((c) => c.id === currentId);
+      if (minha) { minha.email = email; salvarContas(contas); }
+      Object.assign(state.settings, { negocio, usuario, email, moeda: $('#sMoeda').value });
+      setFormatters();
+      persist();
+      renderShell();
+      renderConfig();
+      toast('Alterações salvas.');
+    });
+    $('#sInsights').addEventListener('change', (e) => { state.settings.insights = e.target.checked; persist(); });
+    $('#sLogout').addEventListener('click', sair);
+    $('#sDelete').addEventListener('click', async () => {
+      const ok = await confirmar({
+        titulo: 'Excluir sua conta?',
+        texto: `A conta de ${state.settings.email} e todos os lançamentos dela serão apagados deste navegador. Não dá para desfazer.`,
+        ok: 'Excluir conta',
+      });
+      if (!ok) return;
+      const id = currentId;
+      store.del(keyDados(id));
+      salvarContas(getContas().filter((c) => c.id !== id));
+      sair({ silencioso: true });
+      toast('Conta excluída.', 'warn');
+    });
+    $('#sClear').addEventListener('click', async () => {
+      const ok = await confirmar({ titulo: 'Apagar todos os seus lançamentos?', texto: 'Todos os lançamentos desta conta serão removidos. As categorias e os dados do negócio continuam.', ok: 'Apagar lançamentos' });
+      if (!ok) return;
+      state.lancamentos = [];
+      persist();
+      toast('Lançamentos apagados.', 'warn');
+      go('inicio');
+    });
+
+    // Teclado
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        const open = $$('.modal').filter((m) => !m.hidden).pop();
+        if (open) closeModal(open.id);
+        hideTip();
+        return;
+      }
+      if (e.key !== 'Enter' || e.isComposing) return;
+      const target = e.target;
+      const painel = target.closest && target.closest('[data-auth-panel]');
+      if (painel && target.matches('input')) {
+        e.preventDefault();
+        const btn = painel.querySelector('.btn-primary[data-auth]');
+        if (btn) authAction(btn.dataset.auth, btn);
+        return;
+      }
+      if (target.matches && target.matches('[data-subinput]')) { e.preventDefault(); addSub(target.dataset.subinput); return; }
+      const m = target.closest && target.closest('.modal');
+      if (m && target.matches('input')) {
+        e.preventDefault();
+        if (m.id === 'modalLanc') saveLanc();
+        if (m.id === 'modalCat') saveNewCat();
+      }
+    });
+
+    // Tooltip dos gráficos
+    document.addEventListener('pointerdown', (e) => {
+      lastPointer = e.pointerType || 'mouse';
+      if (lastPointer === 'mouse') return;
+      const t = e.target.closest && e.target.closest('[data-tip-idx]');
+      if (t) {
+        showTip(t, e.clientX, e.clientY);
+        clearTimeout(tipTimer);
+        tipTimer = setTimeout(hideTip, 2600);
+      } else {
+        hideTip();
+      }
+    });
+    document.addEventListener('pointermove', (e) => {
+      if (e.pointerType !== 'mouse') return;
+      const t = e.target.closest && e.target.closest('[data-tip-idx]');
+      if (t) showTip(t, e.clientX, e.clientY); else hideTip();
+    });
+    window.addEventListener('scroll', hideTip, { passive: true });
+
+    // Redesenha os gráficos quando a largura muda
+    let rz = null;
+    let lastW = window.innerWidth;
+    window.addEventListener('resize', () => {
+      clearTimeout(rz);
+      rz = setTimeout(() => {
+        if (Math.abs(window.innerWidth - lastW) < 8) return;
+        lastW = window.innerWidth;
+        if (ui.route === 'inicio') renderDashCharts(false);
+        if (ui.route === 'relatorios') renderRelatorios(false);
+      }, 160);
+    });
+  }
+
+  /* =========================================================
+     ACESSO: primeiro login, entrar e sair
+     ========================================================= */
+  const signup = { nome: '', email: '', senha: '' };
+
+  function showAuth(painel) {
+    closeAllModals();
+    hideTip();
+    $('#app').hidden = true;
+    $('#auth').hidden = false;
+    document.documentElement.setAttribute('data-theme', 'dark');
+    document.title = 'OrganizaMEI · Entrar';
+    const temContas = getContas().length > 0;
+    if (painel === 'login' && !temContas) painel = 'signup1';
+    $$('[data-auth-panel]').forEach((p) => { p.hidden = p.dataset.authPanel !== painel; });
+    $$('[data-has-accounts]').forEach((el) => { el.hidden = !temContas; });
+    $$('#auth .form-error').forEach((el) => { el.textContent = ''; });
+    $$('#auth input[type="password"]').forEach((el) => { el.value = ''; });
+    if (finePointer()) {
+      const f = $(`[data-auth-panel="${painel}"] input`);
+      if (f) setTimeout(() => f.focus(), 30);
+    }
+  }
+
+  async function authAction(acao, btn) {
+    if (acao === 'goto-signup') { showAuth('signup1'); return; }
+    if (acao === 'goto-login') { showAuth('login'); return; }
+    if (acao === 'back') { showAuth('signup1'); $('#aNome').value = signup.nome; $('#aEmail').value = signup.email; return; }
+
+    if (acao === 'next') {
+      const nome = $('#aNome').value.trim();
+      const email = normEmail($('#aEmail').value);
+      const senha = $('#aSenha').value;
+      const err = !nome ? 'Diga como você se chama.'
+        : !emailValido(email) ? 'Confira o e-mail: parece incompleto.'
+        : getContas().some((c) => c.email === email) ? 'Esse e-mail já tem conta neste navegador. Entre com ele.'
+        : senha.length < 6 ? 'A senha precisa ter pelo menos 6 caracteres.'
+        : '';
+      if (err) { $('#aErr1').textContent = err; return; }
+      Object.assign(signup, { nome, email, senha });
+      showAuth('signup2');
+      return;
+    }
+
+    if (acao === 'create') {
+      const negocio = $('#aNegocio').value.trim();
+      if (!negocio) { $('#aErr2').textContent = 'Informe o nome do seu negócio.'; return; }
+      if (!signup.email || !signup.senha) { showAuth('signup1'); return; }
+      if (getContas().some((c) => c.email === signup.email)) { showAuth('signup1'); $('#aErr1').textContent = 'Esse e-mail já tem conta neste navegador.'; return; }
+      btn.disabled = true;
+      try {
+        const id = `u_${uid()}`;
+        const salt = novoSalt();
+        const hash = await hashSenha(signup.senha, salt);
+        salvarContas([...getContas(), { id, email: signup.email, salt, hash, criadoEm: Date.now() }]);
+        state = emptyState({ negocio, usuario: signup.nome, email: signup.email, moeda: $('#aMoeda').value });
+        currentId = id;
+        persist();
+        const nome = signup.nome.split(/\s+/)[0];
+        Object.assign(signup, { nome: '', email: '', senha: '' });
+        ['#aNome', '#aEmail', '#aSenha', '#aNegocio'].forEach((sel) => { $(sel).value = ''; });
+        iniciarSessao(id);
+        toast(`Boas-vindas ao OrganizaMEI, ${nome}!`);
+      } finally {
+        btn.disabled = false;
+      }
+      return;
+    }
+
+    if (acao === 'login') {
+      const email = normEmail($('#aLoginEmail').value);
+      const senha = $('#aLoginSenha').value;
+      if (!email || !senha) { $('#aLoginErr').textContent = 'Preencha e-mail e senha.'; return; }
+      const conta = getContas().find((c) => c.email === email);
+      if (!conta) { $('#aLoginErr').textContent = 'Não encontramos uma conta com esse e-mail neste navegador.'; return; }
+      btn.disabled = true;
+      try {
+        const hash = await hashSenha(senha, conta.salt);
+        if (hash !== conta.hash) { $('#aLoginErr').textContent = 'Senha incorreta. Tente de novo.'; return; }
+        $('#aLoginEmail').value = '';
+        $('#aLoginSenha').value = '';
+        iniciarSessao(conta.id);
+      } finally {
+        btn.disabled = false;
+      }
+    }
+  }
+
+  function iniciarSessao(id) {
+    const conta = getContas().find((c) => c.id === id);
+    if (!conta) { showAuth('login'); return; }
+    currentId = id;
+    state = loadUserData(id) || emptyState({ email: conta.email });
+    store.set(KEY_SESSAO, id);
+    Object.assign(ui, {
+      dashMonth: CUR, lancMonth: CUR, lancTipo: 'todos', lancBusca: '',
+      rep: { periodo: 'ult-6', de: '', ate: '', cat: 'todas', tipo: 'todos' },
+      editingId: null, lastId: null,
+    });
+    $('#auth').hidden = true;
+    $('#app').hidden = false;
+    applyTheme();
+    setFormatters();
+    showRoute(location.hash.slice(1) || 'inicio');
+  }
+
+  function sair(opts = {}) {
+    currentId = null;
+    store.del(KEY_SESSAO);
+    state = emptyState();
+    $$('.stat-value').forEach((el) => { delete el.dataset.v; });
+    try { if (location.hash) location.hash = ''; } catch (e) { /* ambiente sem hash */ }
+    showAuth('login');
+    if (!opts.silencioso) toast('Você saiu da conta.');
+  }
+
+  /* =========================================================
+     INÍCIO
+     ========================================================= */
+  function init() {
+    hydrateIcons();
+    setFormatters();
+    bindEvents();
+    const sessao = store.get(KEY_SESSAO);
+    if (sessao && getContas().some((c) => c.id === sessao)) iniciarSessao(sessao);
+    else showAuth('login');
+  }
+  init();
+})();
+
+</script>
 </body>
 </html>
