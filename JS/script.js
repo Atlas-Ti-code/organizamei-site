@@ -28,20 +28,20 @@
   const fmtDate = (iso) => iso.split('-').reverse().join('/');
   const CUR = monthKeyOf(new Date());
 
-  /* ---------- Dados iniciais (demonstração) ---------- */
-  const STORE_KEY = 'organizamei:v2';
-  const PALETTE = ['#57e39b', '#4fd0ee', '#f6c453', '#b39dfa', '#ff9f6b'];
+  /* ---------- Configuração inicial de cada conta ---------- */
+  const PALETTE = ['#5fdc98', '#e7b95a', '#7cc7d9', '#e39a7a', '#b9a3e3'];
   const COR_OUTROS = '#7f9a8c';
 
   const DEFAULT_SETTINGS = {
-    negocio: 'Ateliê da Maria',
-    usuario: 'Maria',
-    email: 'maria@ateliedamaria.com.br',
+    negocio: '',
+    usuario: '',
+    email: '',
     moeda: 'BRL',
     tema: 'escuro',
     insights: true,
   };
 
+  // Categorias padrão: só a estrutura, sem nenhum lançamento.
   function defaultCategorias() {
     return [
       { id: 'cat-receitas', nome: 'Receitas', tipo: 'entrada', subs: [
@@ -61,97 +61,68 @@
     ];
   }
 
-  // Valores dentro do padrão MEI: teto de R$ 81.000/ano (média de R$ 6.750/mês).
-  // Os 6 meses somam R$ 37.200 de entradas, ritmo de cerca de R$ 74 mil no ano.
-  // Mês atual fecha em prejuízo para a demonstração: Entradas R$ 6.200 x Saídas R$ 7.000.
-  const SEED_MES_ATUAL = [
-    [2, 'Venda de produtos na loja online', 'sub-vendas', 1850],
-    [3, 'Compra de matéria-prima (tecidos e linhas)', 'sub-fornecedores', 2350],
-    [5, 'Aluguel do ateliê', 'sub-aluguel', 1200],
-    [6, 'Encomenda de cliente', 'sub-vendas', 1400],
-    [8, 'Anúncios no Instagram', 'sub-marketing', 650],
-    [9, 'Serviço de personalização', 'sub-servicos', 1150],
-    [10, 'Fornecedor de embalagens', 'sub-fornecedores', 480],
-    [12, 'Pagamento de freelancer (costura)', 'sub-funcionarios', 1100],
-    [14, 'Venda na feira de artesanato', 'sub-vendas', 980],
-    [15, 'Frete e entregas', 'sub-transporte', 390],
-    [18, 'Workshop de bordado', 'sub-servicos', 820],
-    [20, 'DAS MEI (comércio e serviços)', 'sub-impostos', 87.05],
-    [22, 'Conserto da máquina de costura', 'sub-outras-desp', 450],
-    [26, 'Taxas da maquininha de cartão', 'sub-outras-desp', 292.95],
-  ];
-  // [meses atrás, total de entradas, total de saídas] em reais
-  const SEED_HISTORICO = [[5, 5600, 4300], [4, 6300, 4900], [3, 5900, 4700], [2, 6700, 5100], [1, 6500, 6100]];
-  const MODELO_ENTRADAS = [
-    [4, 'Vendas na loja online', 'sub-vendas', 0.40],
-    [11, 'Encomendas de clientes', 'sub-vendas', 0.22],
-    [16, 'Serviços de personalização', 'sub-servicos', 0.24],
-    [23, 'Venda em feira e eventos', 'sub-vendas', 0.10],
-    [27, 'Outras receitas', 'sub-outras-rec', null],
-  ];
-  const ALUGUEL = 1200;
-  const DAS = 87.05; // 5% do salário mínimo de 2026 (INSS) + R$ 1 de ICMS + R$ 5 de ISS
-  const MODELO_SAIDAS = [
-    [3, 'Compra de matéria-prima', 'sub-fornecedores', 0.45],
-    [9, 'Anúncios nas redes sociais', 'sub-marketing', 0.15],
-    [12, 'Pagamento de freelancer', 'sub-funcionarios', 0.20],
-    [17, 'Frete e entregas', 'sub-transporte', 0.12],
-    [25, 'Manutenção e taxas da maquininha', 'sub-outras-desp', null],
-  ];
+  /* ---------- Contas e armazenamento ----------
+     Tudo fica no localStorage deste navegador. Cada conta tem a sua
+     própria chave de dados, então uma pessoa nunca sobrescreve a outra. */
+  const KEY_CONTAS = 'organizamei:v3:contas';
+  const KEY_SESSAO = 'organizamei:v3:sessao';
+  const keyDados = (id) => `organizamei:v3:dados:${id}`;
+  const store = {
+    get(k) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : null; } catch (e) { return null; } },
+    set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); return true; } catch (e) { return false; } },
+    del(k) { try { localStorage.removeItem(k); } catch (e) { /* nada a fazer */ } },
+  };
+  // Remove as versões antigas, que tinham dados de exemplo
+  ['organizamei:v1', 'organizamei:v2'].forEach((k) => store.del(k));
 
-  function seedLancamentos() {
-    const subInfo = {};
-    defaultCategorias().forEach((c) => c.subs.forEach((s) => { subInfo[s.id] = { tipo: c.tipo, cat: c.id }; }));
-    const list = [];
-    let t = Date.now() - 1e9;
-    const add = (key, day, descricao, sub, reais) => {
-      const d = Math.min(day, daysIn(key));
-      list.push({
-        id: uid(), data: `${key}-${pad(d)}`, descricao,
-        tipo: subInfo[sub].tipo, categoriaId: subInfo[sub].cat, subcategoriaId: sub,
-        valor: Math.round(reais * 100), obs: '', criadoEm: t++,
-      });
-    };
-    const split = (total, modelo) => {
-      let acc = 0;
-      return modelo.map(([d, desc, sub, p]) => {
-        const v = p == null ? Math.round((total - acc) * 100) / 100 : Math.round((total * p) / 10) * 10;
-        acc += v;
-        return [d, desc, sub, v];
-      });
-    };
-    for (const [back, E, S] of SEED_HISTORICO) {
-      const key = addMonths(CUR, -back);
-      split(E, MODELO_ENTRADAS).forEach((r) => add(key, ...r));
-      add(key, 5, 'Aluguel do ateliê', 'sub-aluguel', ALUGUEL);
-      add(key, 20, 'DAS MEI (comércio e serviços)', 'sub-impostos', DAS);
-      split(Math.round((S - ALUGUEL - DAS) * 100) / 100, MODELO_SAIDAS).forEach((r) => add(key, ...r));
-    }
-    SEED_MES_ATUAL.forEach((r) => add(CUR, ...r));
-    return list;
+  const getContas = () => { const a = store.get(KEY_CONTAS); return Array.isArray(a) ? a : []; };
+  const salvarContas = (a) => store.set(KEY_CONTAS, a);
+  const normEmail = (e) => String(e || '').trim().toLowerCase();
+  const emailValido = (e) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);
+
+  function emptyState(settings) {
+    return { settings: { ...DEFAULT_SETTINGS, ...(settings || {}) }, categorias: defaultCategorias(), lancamentos: [] };
+  }
+  function loadUserData(id) {
+    const s = store.get(keyDados(id));
+    if (!s || !Array.isArray(s.lancamentos) || !Array.isArray(s.categorias)) return null;
+    s.settings = { ...DEFAULT_SETTINGS, ...(s.settings || {}) };
+    return s;
   }
 
-  /* ---------- Estado e armazenamento ---------- */
-  function freshState(settings) {
-    return { settings: { ...DEFAULT_SETTINGS, ...(settings || {}) }, categorias: defaultCategorias(), lancamentos: seedLancamentos() };
-  }
-  function load() {
-    try {
-      const raw = localStorage.getItem(STORE_KEY);
-      if (!raw) return null;
-      const s = JSON.parse(raw);
-      if (!s || !Array.isArray(s.lancamentos) || !Array.isArray(s.categorias)) return null;
-      s.settings = { ...DEFAULT_SETTINGS, ...(s.settings || {}) };
-      return s;
-    } catch (e) {
-      return null;
-    }
-  }
+  let state = emptyState();
+  let currentId = null;
+  let avisouArmazenamento = false;
   function persist() {
-    try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch (e) { /* sem armazenamento: segue em memória */ }
+    if (!currentId) return;
+    if (!store.set(keyDados(currentId), state) && !avisouArmazenamento) {
+      avisouArmazenamento = true;
+      toast('Este navegador não deixou salvar. Os dados ficam só até você fechar a página.', 'bad');
+    }
   }
 
-  let state = load() || freshState();
+  /* ---------- Senha: guardada como hash, nunca em texto puro ---------- */
+  const toHex = (buf) => Array.from(new Uint8Array(buf)).map((b) => b.toString(16).padStart(2, '0')).join('');
+  function novoSalt() {
+    const a = new Uint8Array(16);
+    if (window.crypto && crypto.getRandomValues) crypto.getRandomValues(a);
+    else for (let i = 0; i < a.length; i++) a[i] = Math.floor(Math.random() * 256);
+    return toHex(a);
+  }
+  async function hashSenha(senha, salt) {
+    if (window.crypto && crypto.subtle) {
+      const enc = new TextEncoder();
+      const key = await crypto.subtle.importKey('raw', enc.encode(senha), 'PBKDF2', false, ['deriveBits']);
+      const bits = await crypto.subtle.deriveBits({ name: 'PBKDF2', salt: enc.encode(salt), iterations: 120000, hash: 'SHA-256' }, key, 256);
+      return `pbkdf2:${toHex(bits)}`;
+    }
+    // Navegador sem Web Crypto: hash simples, só para não guardar a senha em texto
+    let h = 2166136261;
+    const str = salt + senha;
+    for (let i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 16777619); }
+    return `fnv:${(h >>> 0).toString(16)}`;
+  }
+
   const ui = {
     route: 'inicio',
     dashMonth: CUR,
@@ -193,7 +164,7 @@
     for (const l of list) { if (l.tipo === 'entrada') e += l.valor; else s += l.valor; }
     return { e, s, r: e - s, margem: e > 0 ? (e - s) / e : null };
   }
-  const situacao = (r) => (r > 0 ? 'LUCRO' : r < 0 ? 'PREJUÍZO' : 'EMPATE');
+  const situacao = (r) => (r > 0 ? 'Lucro' : r < 0 ? 'Prejuízo' : 'Empate');
   function bySub(list, tipo) {
     const map = new Map();
     list.filter((l) => l.tipo === tipo).forEach((l) => {
@@ -235,9 +206,10 @@
     menu: '<path d="M4 7h16M4 12h16M4 17h16"/>',
     check: '<path d="M5 12.5l4.5 4.5L19 7.5"/>',
     alert: '<path d="M12 8v5M12 16.5h.01"/><circle cx="12" cy="12" r="9"/>',
+    logout: '<path d="M9 20H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h3"/><path d="M16 16l4-4-4-4M20 12H10"/>',
   };
   const icon = (name, cls = '') =>
-    `<svg class="ic ${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[name] || ''}</svg>`;
+    `<svg class="ic ${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[name] || ''}</svg>`;
   function hydrateIcons(root = document) {
     $$('i[data-icon]', root).forEach((el) => { el.outerHTML = icon(el.dataset.icon, el.className); });
   }
@@ -261,7 +233,7 @@
     const step = niceStep(maxV / ticks);
     const top = step * ticks;
     const gw = plotW / buckets.length;
-    const bw = Math.max(5, Math.min(26, gw * 0.3));
+    const bw = Math.max(5, Math.min(18, gw * 0.24));
     const gap = Math.max(2, Math.min(6, gw * 0.06));
     let g = '';
 
@@ -278,8 +250,8 @@
       const cx = gx + gw / 2;
       const he = (b.e / top) * plotH;
       const hs = (b.s / top) * plotH;
-      const rx = Math.min(5, bw / 2);
-      if (b.sel) g += `<rect class="sel-bg" x="${gx + 2}" y="${padT - 8}" width="${gw - 4}" height="${H - 6 - (padT - 8)}" rx="10"/>`;
+      const rx = Math.min(2.5, bw / 2);
+      if (b.sel) g += `<rect class="sel-bg" x="${gx + 2}" y="${padT - 8}" width="${gw - 4}" height="${H - 6 - (padT - 8)}" rx="6"/>`;
       g += `<rect class="bar in" x="${cx - gap / 2 - bw}" y="${padT + plotH - he}" width="${bw}" height="${he}" rx="${rx}" style="animation-delay:${i * 45}ms"/>`;
       g += `<rect class="bar out" x="${cx + gap / 2}" y="${padT + plotH - hs}" width="${bw}" height="${hs}" rx="${rx}" style="animation-delay:${i * 45 + 25}ms"/>`;
       g += `<text class="xlab${b.sel ? ' on' : ''}" x="${cx}" y="${H - 9}" text-anchor="middle">${esc(b.label)}</text>`;
@@ -298,43 +270,32 @@
       `<svg class="svg-chart${opts.animate === false ? ' noanim' : ''}" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="${esc(opts.label || 'Gráfico de entradas e saídas')}">${g}</svg>`;
   }
 
-  /* ---------- Gráfico de rosca ---------- */
-  function renderDonut(host, items, total, opts = {}) {
+  /* ---------- Principais despesas: barra empilhada + lista ---------- */
+  function renderBreakdown(host, items, total, opts = {}) {
     if (!total) {
       host._tips = [];
-      host.innerHTML = `<div class="empty-mini">${icon('chart')}<p>Nenhuma saída registrada neste mês.</p></div>`;
+      host.innerHTML = '<p class="empty-line">Nenhuma saída registrada neste mês.</p>';
       return;
     }
-    const size = 180, sw = 24, r = (size - sw) / 2, C = 2 * Math.PI * r;
-    const gapLen = items.length > 1 ? 2.5 : 0;
-    let off = 0, segs = '';
-    items.forEach((it, i) => {
-      const len = (it.valor / total) * C;
-      const vis = Math.max(0.01, len - gapLen);
-      segs += `<circle class="seg-arc${opts.animate === false ? ' noanim' : ''}" data-tip-idx="${i}" cx="${size / 2}" cy="${size / 2}" r="${r}" stroke="${it.cor}" stroke-width="${sw}" stroke-dasharray="${vis.toFixed(2)} ${C.toFixed(2)}" stroke-dashoffset="${(-off).toFixed(2)}" style="animation-delay:${i * 80}ms"/>`;
-      off += len;
-    });
-    const first = items[0];
     host._tips = items.map((it) => `<strong>${esc(it.nome)}</strong><span>${money(it.valor)} · ${pct(it.valor / total)} das saídas</span>`);
     host.innerHTML = `
-      <div class="donut">
-        <svg viewBox="0 0 ${size} ${size}" role="img" aria-label="Distribuição das despesas">
-          <circle class="donut-track" cx="${size / 2}" cy="${size / 2}" r="${r}" fill="none" stroke-width="${sw}"/>
-          <g transform="rotate(-90 ${size / 2} ${size / 2})">${segs}</g>
-        </svg>
-        <div class="donut-center"><strong>${pct(first.valor / total)}</strong><small>${esc(first.nome)}</small></div>
+      <div class="stack-bar${opts.animate === false ? ' noanim' : ''}" role="img" aria-label="Divisão das saídas por subcategoria">
+        ${items.map((it, i) => `<span data-tip-idx="${i}" style="flex:${it.valor} 1 0;background:${it.cor}"></span>`).join('')}
       </div>
-      <ul class="donut-legend">
-        ${items.map((it) => `<li><span class="sw" style="background:${it.cor}"></span><span class="nm"><span>${esc(it.nome)}</span><small>${money(it.valor)}</small></span><span class="pc">${pct(it.valor / total)}</span></li>`).join('')}
+      <ul class="breakdown">
+        ${items.map((it) => `<li><span class="sw" style="background:${it.cor}"></span><span class="n">${esc(it.nome)}</span><span class="v">${money(it.valor)}</span><span class="p">${pct(it.valor / total)}</span></li>`).join('')}
       </ul>`;
   }
 
   function donutItems(list) {
     const rows = bySub(list, 'saida');
-    const top = rows.slice(0, 4).map((r, i) => ({ nome: r.nome, valor: r.valor, cor: PALETTE[i] }));
-    const resto = rows.slice(4).reduce((a, r) => a + r.valor, 0);
-    if (resto > 0) top.push({ nome: 'Outros', valor: resto, cor: COR_OUTROS });
-    return top;
+    const mostrar = rows.length <= 6 ? rows : rows.slice(0, 5);
+    const items = mostrar.map((r, i) => ({ nome: r.nome, valor: r.valor, cor: PALETTE[i] || COR_OUTROS }));
+    const resto = rows.slice(mostrar.length);
+    if (resto.length) {
+      items.push({ nome: `Demais (${resto.map((r) => r.nome).join(', ')})`, valor: resto.reduce((a, r) => a + r.valor, 0), cor: COR_OUTROS });
+    }
+    return items;
   }
 
   /* ---------- Ranking em barras horizontais ---------- */
@@ -356,11 +317,11 @@
   function setMoney(el, cents, animate = true) {
     const prev = el.dataset.v === undefined ? null : Number(el.dataset.v);
     el.dataset.v = String(cents);
-    const card = el.closest('.kpi');
+    const card = el.closest('.stat');
     if (prev !== null && prev !== cents && card && animate) {
-      card.classList.remove('pulse');
+      card.classList.remove('changed');
       void card.offsetWidth;
-      card.classList.add('pulse');
+      card.classList.add('changed');
     }
     const from = prev === null ? 0 : prev;
     if (!animate || from === cents || reduceMotion()) { el.textContent = money(cents); return; }
@@ -424,15 +385,15 @@
     $$('[data-avatar]').forEach((el) => { el.textContent = ini; });
     $$('[data-user]').forEach((el) => { el.textContent = s.usuario || 'Usuário'; });
     $$('[data-biz]').forEach((el) => { el.textContent = s.negocio || 'Meu negócio'; });
-    document.title = `OrganizaMEI · ${s.negocio || 'Seu negócio organizado'}`;
+    document.title = s.negocio ? `OrganizaMEI · ${s.negocio}` : 'OrganizaMEI';
   }
 
-  function deltaPct(cur, prev, goodWhenUp) {
-    if (!prev) return '<span>Sem dados do mês anterior</span>';
+  function deltaPct(cur, prev, goodWhenUp, prevNome) {
+    if (!prev) return `Sem dados de ${prevNome}`;
     const d = (cur - prev) / prev;
-    if (Math.abs(d) < 0.005) return '<span>Igual ao mês anterior</span>';
+    if (Math.abs(d) < 0.005) return `Igual a ${prevNome}`;
     const up = d > 0;
-    return `<span class="${up === goodWhenUp ? 'good' : 'bad'}">${up ? '↑' : '↓'} ${pct(Math.abs(d))}</span> vs. mês anterior`;
+    return `<span class="${up === goodWhenUp ? 'good' : 'bad'}">${up ? '↑' : '↓'} ${pct(Math.abs(d))}</span> em relação a ${prevNome}`;
   }
 
   /* ---------- Início ---------- */
@@ -443,41 +404,72 @@
     const prevList = ofMonth(addMonths(key, -1));
     const p = totals(prevList);
 
-    $('#helloName').textContent = state.settings.usuario || 'empreendedor(a)';
+    const primeiroNome = (state.settings.usuario || '').trim().split(/\s+/)[0] || 'empreendedor(a)';
+    const contaNova = state.lancamentos.length === 0;
+    $('#helloName').textContent = primeiroNome;
     $('#helloSub').textContent = key === CUR
       ? 'Este é o resumo do seu negócio neste mês.'
       : `Este é o resumo do seu negócio em ${monthLabel(key)}.`;
     fillMonthSelect($('#dashMonth'), monthOptions([key]), key);
 
+    // A frase que explica o mês em linguagem simples
+    const mesNome = MESES[Number(key.slice(5, 7)) - 1];
+    const prevNome = MESES[Number(addMonths(key, -1).slice(5, 7)) - 1].toLowerCase();
+    const atual = key === CUR;
+    let linha, sub;
+    if (contaNova) {
+      linha = `Tudo pronto, ${primeiroNome}.`;
+      sub = 'Registre sua primeira entrada ou saída e o resumo do mês aparece aqui.';
+    } else if (!list.length) {
+      linha = `Nenhum lançamento em ${mesNome.toLowerCase()} ainda.`;
+      sub = 'Registre a primeira entrada ou saída para ver o resumo aqui.';
+    } else if (t.r < 0) {
+      linha = atual ? `${mesNome} está no vermelho até agora.` : `${mesNome} fechou no vermelho.`;
+      sub = `Saiu ${money(-t.r)} a mais do que entrou.`;
+    } else if (t.r > 0) {
+      linha = atual ? `${mesNome} está no azul até agora.` : `${mesNome} fechou no azul.`;
+      sub = `Sobraram ${money(t.r)} depois de pagar as contas.`;
+    } else {
+      linha = `${mesNome} ${atual ? 'está' : 'ficou'} empatado.`;
+      sub = 'Entrou exatamente o mesmo valor que saiu.';
+    }
+    $('#sumLine').textContent = linha;
+    $('#sumSub').textContent = sub;
+    $('#sumCta').hidden = !contaNova;
+
     setMoney($('#kIn'), t.e, animate);
     setMoney($('#kOut'), t.s, animate);
     setMoney($('#kRes'), t.r, animate);
-    $('#kInDelta').innerHTML = deltaPct(t.e, p.e, true);
-    $('#kOutDelta').innerHTML = deltaPct(t.s, p.s, false);
+    $('#kInDelta').innerHTML = deltaPct(t.e, p.e, true, prevNome);
+    $('#kOutDelta').innerHTML = deltaPct(t.s, p.s, false, prevNome);
 
     const res = $('#kpiRes');
     res.classList.toggle('neg', t.r < 0);
-    res.classList.toggle('zero', t.r === 0);
-    $('#kStatus').textContent = list.length ? situacao(t.r) : 'SEM DADOS';
+    res.classList.toggle('zero', t.r === 0 && list.length > 0);
+    res.classList.toggle('vazio', !list.length);
+    $('#kStatus').textContent = list.length ? situacao(t.r) : '';
+    $('#kStatus').hidden = !list.length;
     if (prevList.length) {
       const diff = t.r - p.r;
       $('#kResDelta').innerHTML = diff === 0
-        ? '<span>Igual ao mês anterior</span>'
-        : `<span class="${diff > 0 ? 'good' : 'bad'}">${diff > 0 ? '↑' : '↓'} ${money(Math.abs(diff))}</span> vs. mês anterior`;
+        ? `Igual a ${prevNome}`
+        : `<span class="${diff > 0 ? 'good' : 'bad'}">${money(Math.abs(diff))} ${diff > 0 ? 'acima' : 'abaixo'}</span> de ${prevNome}`;
     } else {
-      $('#kResDelta').innerHTML = '<span>Sem dados do mês anterior</span>';
+      $('#kResDelta').textContent = `Sem dados de ${prevNome}`;
     }
+    if (contaNova) ['#kInDelta', '#kOutDelta', '#kResDelta'].forEach((id) => { $(id).textContent = ''; });
 
     renderDashCharts(animate);
 
     const box = $('#dashInsight');
     box.hidden = !state.settings.insights;
+    $('#dashBottom').classList.toggle('solo', !state.settings.insights);
     if (state.settings.insights) $('#insightList').innerHTML = insightItems(buildInsights(key).slice(0, 3));
 
     const recent = [...list].sort(sortLanc).slice(0, 5);
     $('#recentList').innerHTML = recent.length
       ? recent.map(miniRow).join('')
-      : `<li class="empty-mini">${icon('list')}<p>Nenhum lançamento neste mês. Use “Novo lançamento” para começar.</p></li>`;
+      : '<li class="empty-line">Nenhum lançamento neste mês. Use “Novo lançamento” para começar.</li>';
   }
 
   function renderDashCharts(animate = true) {
@@ -488,17 +480,25 @@
       const t = totals(ofMonth(k));
       buckets.push({ key: k, label: monthShort(k), title: monthLabel(k), e: t.e, s: t.s, sel: k === key });
     }
-    renderBars($('#dashBars'), buckets, { animate, label: 'Entradas e saídas dos últimos 6 meses' });
+    const graficoVazio = buckets.every((b) => !b.e && !b.s);
+    $('#dashBarsNote').hidden = graficoVazio;
+    if (graficoVazio) {
+      $('#dashBars')._tips = [];
+      $('#dashBars').innerHTML = '<p class="chart-empty">O gráfico aparece aqui assim que você registrar os primeiros lançamentos.</p>';
+    } else {
+      renderBars($('#dashBars'), buckets, { animate, label: 'Entradas e saídas dos últimos 6 meses' });
+    }
     const list = ofMonth(key);
-    renderDonut($('#dashDonut'), donutItems(list), totals(list).s, { animate });
+    renderBreakdown($('#dashDonut'), donutItems(list), totals(list).s, { animate });
   }
 
   function miniRow(l) {
     const c = classif(l);
     const isIn = l.tipo === 'entrada';
+    const [, m, d] = l.data.split('-');
     return `<li class="mini${l.id === ui.lastId ? ' flash' : ''}">
-      <span class="mini-ic ${isIn ? 'in' : 'out'}">${icon(isIn ? 'up' : 'down')}</span>
-      <div class="mini-txt"><strong>${esc(l.descricao)}</strong><small>${esc(c.sub)} · ${fmtDate(l.data)}</small></div>
+      <span class="mini-date"><b>${d}</b>${MESES_ABREV[Number(m) - 1].toLowerCase()}</span>
+      <div class="mini-txt"><strong>${esc(l.descricao)}</strong><small>${esc(c.sub)}</small></div>
       <span class="mini-val ${isIn ? 'val-in' : 'val-out'}">${isIn ? '+' : '−'} ${money(l.valor)}</span>
     </li>`;
   }
@@ -670,8 +670,10 @@
     setMoney($('#rOut'), t.s, animate);
     setMoney($('#rRes'), t.r, animate);
     $('#rResCard').classList.toggle('neg', t.r < 0);
-    $('#rResCard').classList.toggle('zero', t.r === 0);
-    $('#rStatus').textContent = list.length ? situacao(t.r) : 'SEM DADOS';
+    $('#rResCard').classList.toggle('zero', t.r === 0 && list.length > 0);
+    $('#rResCard').classList.toggle('vazio', !list.length);
+    $('#rStatus').textContent = list.length ? situacao(t.r) : '';
+    $('#rStatus').hidden = !list.length;
     $('#rMargem').textContent = t.margem === null ? '—' : pct(t.margem);
 
     // Evolução
@@ -681,7 +683,12 @@
       return { ...b, e: tt.e, s: tt.s };
     });
     $('#rBarsTitle').textContent = title;
-    renderBars($('#rBars'), filled, { animate, height: 260, label: title });
+    if (filled.every((b) => !b.e && !b.s)) {
+      $('#rBars')._tips = [];
+      $('#rBars').innerHTML = '<p class="chart-empty">Nenhum lançamento nesse período ainda.</p>';
+    } else {
+      renderBars($('#rBars'), filled, { animate, height: 260, label: title });
+    }
 
     // Rankings
     const outRows = bySub(list, 'saida');
@@ -721,8 +728,7 @@
   function renderDicas() {
     $('#dInsTitle').textContent = `Insights de ${monthLabel(ui.dashMonth)}`;
     $('#dInsList').innerHTML = insightItems(buildInsights(ui.dashMonth));
-    $('#tipsGrid').innerHTML = DICAS.map(([e, t, p]) =>
-      `<article class="card tip"><span class="tip-icon" aria-hidden="true">${e}</span><h3>${t}</h3><p>${p}</p></article>`).join('');
+    $('#tipsGrid').innerHTML = DICAS.map(([, t, p]) => `<article class="tip"><h3>${t}</h3><p>${p}</p></article>`).join('');
   }
 
   /* ---------- Configurações ---------- */
@@ -986,7 +992,7 @@
   function bindEvents() {
     window.addEventListener('hashchange', () => {
       const name = location.hash.slice(1);
-      if (name && name !== ui.route) showRoute(name);
+      if (currentId && name && name !== ui.route) showRoute(name);
     });
 
     document.addEventListener('click', async (e) => {
@@ -1008,6 +1014,8 @@
       if (action === 'new') { openLanc(); return; }
       if (action === 'new-cat') { openNewCat(); return; }
       if (action === 'more') { openModal('modalMore'); return; }
+      if (action === 'logout') { sair(); return; }
+      if (t.dataset.auth) { authAction(t.dataset.auth, t); return; }
 
       if (t.dataset.edit) { openLanc(t.dataset.edit); return; }
 
@@ -1092,14 +1100,16 @@
 
     // Configurações
     $('#sSave').addEventListener('click', () => {
-      const email = $('#sEmail').value.trim();
-      if (email && !/^\S+@\S+\.\S+$/.test(email)) { toast('Confira o e-mail: parece incompleto.', 'bad'); return; }
-      Object.assign(state.settings, {
-        negocio: $('#sNegocio').value.trim() || DEFAULT_SETTINGS.negocio,
-        usuario: $('#sUsuario').value.trim() || DEFAULT_SETTINGS.usuario,
-        email,
-        moeda: $('#sMoeda').value,
-      });
+      const negocio = $('#sNegocio').value.trim();
+      const usuario = $('#sUsuario').value.trim();
+      const email = normEmail($('#sEmail').value);
+      if (!negocio || !usuario) { toast('Preencha o nome do negócio e o seu nome.', 'bad'); return; }
+      if (!emailValido(email)) { toast('Confira o e-mail: parece incompleto.', 'bad'); return; }
+      const contas = getContas();
+      if (contas.some((c) => c.email === email && c.id !== currentId)) { toast('Já existe outra conta com esse e-mail neste navegador.', 'bad'); return; }
+      const minha = contas.find((c) => c.id === currentId);
+      if (minha) { minha.email = email; salvarContas(contas); }
+      Object.assign(state.settings, { negocio, usuario, email, moeda: $('#sMoeda').value });
       setFormatters();
       persist();
       renderShell();
@@ -1107,18 +1117,22 @@
       toast('Alterações salvas.');
     });
     $('#sInsights').addEventListener('change', (e) => { state.settings.insights = e.target.checked; persist(); });
-    $('#sReset').addEventListener('click', async () => {
-      const ok = await confirmar({ titulo: 'Restaurar dados de exemplo?', texto: 'Os lançamentos e categorias atuais serão substituídos pelos dados de demonstração. Suas configurações continuam iguais.', ok: 'Restaurar dados', perigo: false });
+    $('#sLogout').addEventListener('click', sair);
+    $('#sDelete').addEventListener('click', async () => {
+      const ok = await confirmar({
+        titulo: 'Excluir sua conta?',
+        texto: `A conta de ${state.settings.email} e todos os lançamentos dela serão apagados deste navegador. Não dá para desfazer.`,
+        ok: 'Excluir conta',
+      });
       if (!ok) return;
-      state = freshState(state.settings);
-      ui.dashMonth = CUR;
-      ui.lancMonth = CUR;
-      persist();
-      toast('Dados de exemplo restaurados.');
-      go('inicio');
+      const id = currentId;
+      store.del(keyDados(id));
+      salvarContas(getContas().filter((c) => c.id !== id));
+      sair({ silencioso: true });
+      toast('Conta excluída.', 'warn');
     });
     $('#sClear').addEventListener('click', async () => {
-      const ok = await confirmar({ titulo: 'Apagar todos os lançamentos?', texto: 'Todos os lançamentos serão removidos deste navegador. As categorias continuam.', ok: 'Apagar lançamentos' });
+      const ok = await confirmar({ titulo: 'Apagar todos os seus lançamentos?', texto: 'Todos os lançamentos desta conta serão removidos. As categorias e os dados do negócio continuam.', ok: 'Apagar lançamentos' });
       if (!ok) return;
       state.lancamentos = [];
       persist();
@@ -1136,6 +1150,13 @@
       }
       if (e.key !== 'Enter' || e.isComposing) return;
       const target = e.target;
+      const painel = target.closest && target.closest('[data-auth-panel]');
+      if (painel && target.matches('input')) {
+        e.preventDefault();
+        const btn = painel.querySelector('.btn-primary[data-auth]');
+        if (btn) authAction(btn.dataset.auth, btn);
+        return;
+      }
       if (target.matches && target.matches('[data-subinput]')) { e.preventDefault(); addSub(target.dataset.subinput); return; }
       const m = target.closest && target.closest('.modal');
       if (m && target.matches('input')) {
@@ -1180,14 +1201,131 @@
   }
 
   /* =========================================================
+     ACESSO: primeiro login, entrar e sair
+     ========================================================= */
+  const signup = { nome: '', email: '', senha: '' };
+
+  function showAuth(painel) {
+    closeAllModals();
+    hideTip();
+    $('#app').hidden = true;
+    $('#auth').hidden = false;
+    document.documentElement.setAttribute('data-theme', 'dark');
+    document.title = 'OrganizaMEI · Entrar';
+    const temContas = getContas().length > 0;
+    if (painel === 'login' && !temContas) painel = 'signup1';
+    $$('[data-auth-panel]').forEach((p) => { p.hidden = p.dataset.authPanel !== painel; });
+    $$('[data-has-accounts]').forEach((el) => { el.hidden = !temContas; });
+    $$('#auth .form-error').forEach((el) => { el.textContent = ''; });
+    $$('#auth input[type="password"]').forEach((el) => { el.value = ''; });
+    if (finePointer()) {
+      const f = $(`[data-auth-panel="${painel}"] input`);
+      if (f) setTimeout(() => f.focus(), 30);
+    }
+  }
+
+  async function authAction(acao, btn) {
+    if (acao === 'goto-signup') { showAuth('signup1'); return; }
+    if (acao === 'goto-login') { showAuth('login'); return; }
+    if (acao === 'back') { showAuth('signup1'); $('#aNome').value = signup.nome; $('#aEmail').value = signup.email; return; }
+
+    if (acao === 'next') {
+      const nome = $('#aNome').value.trim();
+      const email = normEmail($('#aEmail').value);
+      const senha = $('#aSenha').value;
+      const err = !nome ? 'Diga como você se chama.'
+        : !emailValido(email) ? 'Confira o e-mail: parece incompleto.'
+        : getContas().some((c) => c.email === email) ? 'Esse e-mail já tem conta neste navegador. Entre com ele.'
+        : senha.length < 6 ? 'A senha precisa ter pelo menos 6 caracteres.'
+        : '';
+      if (err) { $('#aErr1').textContent = err; return; }
+      Object.assign(signup, { nome, email, senha });
+      showAuth('signup2');
+      return;
+    }
+
+    if (acao === 'create') {
+      const negocio = $('#aNegocio').value.trim();
+      if (!negocio) { $('#aErr2').textContent = 'Informe o nome do seu negócio.'; return; }
+      if (!signup.email || !signup.senha) { showAuth('signup1'); return; }
+      if (getContas().some((c) => c.email === signup.email)) { showAuth('signup1'); $('#aErr1').textContent = 'Esse e-mail já tem conta neste navegador.'; return; }
+      btn.disabled = true;
+      try {
+        const id = `u_${uid()}`;
+        const salt = novoSalt();
+        const hash = await hashSenha(signup.senha, salt);
+        salvarContas([...getContas(), { id, email: signup.email, salt, hash, criadoEm: Date.now() }]);
+        state = emptyState({ negocio, usuario: signup.nome, email: signup.email, moeda: $('#aMoeda').value });
+        currentId = id;
+        persist();
+        const nome = signup.nome.split(/\s+/)[0];
+        Object.assign(signup, { nome: '', email: '', senha: '' });
+        ['#aNome', '#aEmail', '#aSenha', '#aNegocio'].forEach((sel) => { $(sel).value = ''; });
+        iniciarSessao(id);
+        toast(`Boas-vindas ao OrganizaMEI, ${nome}!`);
+      } finally {
+        btn.disabled = false;
+      }
+      return;
+    }
+
+    if (acao === 'login') {
+      const email = normEmail($('#aLoginEmail').value);
+      const senha = $('#aLoginSenha').value;
+      if (!email || !senha) { $('#aLoginErr').textContent = 'Preencha e-mail e senha.'; return; }
+      const conta = getContas().find((c) => c.email === email);
+      if (!conta) { $('#aLoginErr').textContent = 'Não encontramos uma conta com esse e-mail neste navegador.'; return; }
+      btn.disabled = true;
+      try {
+        const hash = await hashSenha(senha, conta.salt);
+        if (hash !== conta.hash) { $('#aLoginErr').textContent = 'Senha incorreta. Tente de novo.'; return; }
+        $('#aLoginEmail').value = '';
+        $('#aLoginSenha').value = '';
+        iniciarSessao(conta.id);
+      } finally {
+        btn.disabled = false;
+      }
+    }
+  }
+
+  function iniciarSessao(id) {
+    const conta = getContas().find((c) => c.id === id);
+    if (!conta) { showAuth('login'); return; }
+    currentId = id;
+    state = loadUserData(id) || emptyState({ email: conta.email });
+    store.set(KEY_SESSAO, id);
+    Object.assign(ui, {
+      dashMonth: CUR, lancMonth: CUR, lancTipo: 'todos', lancBusca: '',
+      rep: { periodo: 'ult-6', de: '', ate: '', cat: 'todas', tipo: 'todos' },
+      editingId: null, lastId: null,
+    });
+    $('#auth').hidden = true;
+    $('#app').hidden = false;
+    applyTheme();
+    setFormatters();
+    showRoute(location.hash.slice(1) || 'inicio');
+  }
+
+  function sair(opts = {}) {
+    currentId = null;
+    store.del(KEY_SESSAO);
+    state = emptyState();
+    $$('.stat-value').forEach((el) => { delete el.dataset.v; });
+    try { if (location.hash) location.hash = ''; } catch (e) { /* ambiente sem hash */ }
+    showAuth('login');
+    if (!opts.silencioso) toast('Você saiu da conta.');
+  }
+
+  /* =========================================================
      INÍCIO
      ========================================================= */
   function init() {
     hydrateIcons();
-    applyTheme();
     setFormatters();
     bindEvents();
-    showRoute(location.hash.slice(1) || 'inicio');
+    const sessao = store.get(KEY_SESSAO);
+    if (sessao && getContas().some((c) => c.id === sessao)) iniciarSessao(sessao);
+    else showAuth('login');
   }
   init();
 })();
