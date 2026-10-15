@@ -1,4 +1,4 @@
-# OrganizaMEI
+# ClareiaMEI
 
 Seu negócio organizado. Suas decisões mais claras.
 
